@@ -1,9 +1,9 @@
 from utils import timeformat
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, DateTime, Float, String
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
 
 from config import DBCHOICE
 import os
@@ -59,13 +59,13 @@ class ServiceDB():
         self.session = ServiceDB.Session()
    
     def saveMoneyMinutes(self, tuple_in):
-        moneyminutes = Money_Minutes(tuple_in[0], tuple_in[1], tuple_in[2])
+        moneyminutes = Money_Minute(tuple_in[0], tuple_in[1], tuple_in[2])
         self.session.add(moneyminutes)
         self.session.commit()
     
     def queryMoneyMinutes(self, count=None):
         #return latest cur of last 30 minutes
-        query = self.session.query(Money_Minutes).order_by(Money_Minutes.id.desc()).all()
+        query = self.session.query(Money_Minute).order_by(Money_Minute.id.desc()).all()
         for index, row in enumerate(query):
             row.timeshow = timeformat(row.timestamp)
             if index % 3 == 0:
@@ -78,12 +78,12 @@ class ServiceDB():
         return query
     
     def saveMoneyHours(self, tuple_in):
-        moneyhours = Money_Hours(tuple_in[0], tuple_in[1], tuple_in[2])
+        moneyhours = Money_Hour(tuple_in[0], tuple_in[1], tuple_in[2])
         self.session.add(moneyhours)
         self.session.commit()
         
     def queryMoneyHours(self, count=None):
-        query = self.session.query(Money_Hours).order_by(Money_Hours.id.desc()).all()
+        query = self.session.query(Money_Hour).order_by(Money_Hour.id.desc()).all()
         for index, row in enumerate(query):
             row.timeshow = timeformat(row.timestamp)
             if index % 3 == 0:
@@ -95,39 +95,79 @@ class ServiceDB():
         query.reverse()
         return query
 
-class Money_Minutes(_Base):
+class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     timestamp = Column(Float)
     value = Column(Float)
-    
-    def __init__(self, name, timestamp, value):
-        self.name = name
-        self.timestamp = timestamp
-        self.value = value
         
     def __repr__(self):
-        print "<Money_Minutes (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
+        print "<Money_Minute (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
         
-class Money_Hours(_Base):
+class Money_Hour(_Base):
     __tablename__ = 'money_hours'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     timestamp = Column(Float)
     value = Column(Float)
 
-    def __init__(self, name, timestamp, value):
-        self.name = name
-        self.timestamp = timestamp
-        self.value = value
-
     def __repr__(self):
-        print "<Money_Hours (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
+        print "<Money_Hour (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
 
+class User(_Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
+    password = Column(String)
+       
+    def __repr__(self):
+        print "<User (%s, %s, %s)>" % (self.name, self.email, self.password)
+        
+class Article(_Base):
+    __tablename__ = 'articles'
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    URL = Column(String)
+    score = Column(Integer)
+    hot = Column(Float)
+    
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", backref=backref('articles', order_by=id))
+    
+    category_id = Column(Integer, ForeignKey('categories.id'))
+    category = relationship("Category", backref=backref('articles', order_by=id))
+    
+   
+    def __repr__(self):
+        print "<Article (%s)>" % (self.title)
+        
+class Category(_Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    
+    def __init__(self, name):
+        self.name = name
+        
+    def __repr__(self):
+        print "<Category (%s)>" % (self.name)
+        
 if __name__ == '__main__':
     db = ServiceDB()
-    for row in db.queryMoneyMinutes():
-        print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
-    for row in db.queryMoneyHours():
-        print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
+
+    ken = User(name='ken',email='zhdhui@g.com',  password='gjffdd')
+#     jack.articles = [Article(title='TITLE 1'), Article(title='TITLE 2'),]
+#     cat = Category(name='life')
+#     cat.articles = [Article(title='TITLE 3')]
+    db.session.add(ken)
+    db.session.flush()
+    art = Article(title="mytitle2", user_id=ken.id)
+#     db.session.add(cat)
+    db.session.add(art)
+    db.session.commit()
+#     for row in db.queryMoneyMinutes():
+#         print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
+#     for row in db.queryMoneyHours():
+#         print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
