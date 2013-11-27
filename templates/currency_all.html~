@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+
+	 var data1 = new google.visualization.DataTable();
+	data1.addColumn('string', '时间'); // Implicit domain label col.
+	data1.addColumn('number', '澳币30分钟汇率'); // Implicit series 1 data col.
+	data1.addColumn({type:'string', role:'annotation'}); // annotation role col.
+	data1.addRows([
+	 {% for cur in currencies_min %}
+	    ["{{ cur.timeshow[-8:-3] }}",  {{ cur.value }}, "{{ cur.annotation }}"],
+	 {% endfor %}
+	]);
+
+
+
+        var options1 = {
+          title: '半小时走势图-澳币人民币'
+        };
+
+        var chart1 = new google.visualization.LineChart(document.getElementById('chart_div1'));
+        chart1.draw(data1, options1);
+
+
+	var data2 = new google.visualization.DataTable();
+	data2.addColumn('string', '时间'); // Implicit domain label col.
+	data2.addColumn('number', '澳币24小时汇率'); // Implicit series 1 data col.
+	data2.addColumn({type:'string', role:'annotation'}); // annotation role col.
+	data2.addRows([
+	 {% for cur in currencies_min %}
+	    ["{{ cur.timeshow[-8:-3] }}",  {{ cur.value }}, "{{ cur.annotation }}"],
+	 {% endfor %}
+	]);
+
+
+
+        var options2 = {
+          title: '24小时走势图-澳币人民币'
+        };
+
+        var chart2 = new google.visualization.LineChart(document.getElementById('chart_div2'));
+        chart2.draw(data2, options2);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div1" style="width: 900px; height: 500px;"></div>
+    <div id="chart_div2" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

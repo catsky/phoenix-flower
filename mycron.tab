@@ -1,0 +1,2 @@
+
+* * * * * /usr/bin/python ~/Desktop/share/Flask/cron.py >>~/Desktop/mycron.txt
