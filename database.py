@@ -17,7 +17,7 @@ class ServiceDB():
     Session = None  # Session maker function stub
     dbconn_str = ""
 
-    def __init__(self, sqlite_path='/home/catsky/Desktop/share/Flask/data/db/'):
+    def __init__(self, sqlite_path='/home/catsky/Desktop/workspace/phoenix-flower/data/db/'):
         self.session = None
         if ServiceDB.engine is None:
             # Valid SQLite URL forms are:
