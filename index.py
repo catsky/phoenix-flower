@@ -11,9 +11,9 @@ db = ServiceDB()
 def startCron():
     cron = CronTab('catsky')
     cron.remove_all('/usr/bin/python')
-    job1 = cron.new(command='/usr/bin/python ~/home/catsky/Desktop/workspace/phoenix-flower/cron.py')
+    job1 = cron.new(command='/usr/bin/python /home/catsky/Desktop/workspace/phoenix-flower/cron.py')
     job1.every().minute()
-    job2 = cron.new(command='/usr/bin/python ~/home/catsky/Desktop/workspace/phoenix-flower/cron.py --hours')
+    job2 = cron.new(command='/usr/bin/python /home/catsky/Desktop/workspace/phoenix-flower/cron.py --hours')
     job2.every().hour()
     cron.write()
     print 'cron job started as the following'
@@ -22,7 +22,7 @@ def startCron():
 
 
 @app.route("/cur/<string:freq>")
-def hello(freq):
+def currrency(freq):
     if freq == None or freq == "minutes":
         cur = db.queryMoneyMinutes(30)
         return render_template('currency_minutes.html', currencies=cur)
@@ -35,6 +35,11 @@ def hello(freq):
         return render_template('currency_all.html', currencies_min=cur1, currencies_hour=cur2)
 
 
+@app.route("/")
+def index():
+    query = db.queryArticles()
+    return render_template('news.html', articles=query)
+    
 if __name__ == "__main__":
     startCron()
     app.run()

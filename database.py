@@ -59,7 +59,7 @@ class ServiceDB():
         self.session = ServiceDB.Session()
    
     def saveMoneyMinutes(self, tuple_in):
-        moneyminutes = Money_Minute(tuple_in[0], tuple_in[1], tuple_in[2])
+        moneyminutes = Money_Minute(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
         self.session.add(moneyminutes)
         self.session.commit()
     
@@ -78,7 +78,7 @@ class ServiceDB():
         return query
     
     def saveMoneyHours(self, tuple_in):
-        moneyhours = Money_Hour(tuple_in[0], tuple_in[1], tuple_in[2])
+        moneyhours = Money_Hour(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
         self.session.add(moneyhours)
         self.session.commit()
         
@@ -94,13 +94,19 @@ class ServiceDB():
             query = query[:count]
         query.reverse()
         return query
+    
+    def queryArticles(self, count=None):
+        query = self.session.query(Article).order_by(Article.id.desc()).all()
+        if count != None:
+            query = query[:count]
+        return query
 
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    timestamp = Column(Float)
-    value = Column(Float)
+    name = Column(String, nullable=False)
+    timestamp = Column(Float, nullable=False)
+    value = Column(Float, nullable=False)
         
     def __repr__(self):
         print "<Money_Minute (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
@@ -108,9 +114,9 @@ class Money_Minute(_Base):
 class Money_Hour(_Base):
     __tablename__ = 'money_hours'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    timestamp = Column(Float)
-    value = Column(Float)
+    name = Column(String, nullable=False)
+    timestamp = Column(Float, nullable=False)
+    value = Column(Float, nullable=False)
 
     def __repr__(self):
         print "<Money_Hour (%s, %s, %s)>" % (self.id, self.timestamp, self.value)
@@ -118,25 +124,26 @@ class Money_Hour(_Base):
 class User(_Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String)
-    password = Column(String)
+    name = Column(String, nullable=False, unique=True)
+    email = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
        
     def __repr__(self):
         print "<User (%s, %s, %s)>" % (self.name, self.email, self.password)
+    
         
 class Article(_Base):
     __tablename__ = 'articles'
     id = Column(Integer, primary_key=True)
-    title = Column(String)
-    URL = Column(String)
+    title = Column(String, nullable=False)
+    URL = Column(String, nullable=False, unique=True)
     score = Column(Integer)
     hot = Column(Float)
     
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", backref=backref('articles', order_by=id))
     
-    category_id = Column(Integer, ForeignKey('categories.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     category = relationship("Category", backref=backref('articles', order_by=id))
     
    
@@ -146,7 +153,7 @@ class Article(_Base):
 class Category(_Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False, unique=True)
     
     def __init__(self, name):
         self.name = name
@@ -156,17 +163,22 @@ class Category(_Base):
         
 if __name__ == '__main__':
     db = ServiceDB()
-
+#     query = db.queryArticles(30)
+#     for row in query:
+#         print row.title
+#         print type(row.user)
+#         if row.user is not None:
+#             print row.user
     ken = User(name='ken',email='zhdhui@g.com',  password='gjffdd')
-#     jack.articles = [Article(title='TITLE 1'), Article(title='TITLE 2'),]
-#     cat = Category(name='life')
-#     cat.articles = [Article(title='TITLE 3')]
+    cat = Category(name='life')
     db.session.add(ken)
+    db.session.add(cat)
     db.session.flush()
-    art = Article(title="mytitle2", user_id=ken.id)
-#     db.session.add(cat)
+    art = Article(title="title", URL="link", user_id=ken.id, category_id=cat.id)
     db.session.add(art)
     db.session.commit()
+
+    
 #     for row in db.queryMoneyMinutes():
 #         print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
 #     for row in db.queryMoneyHours():
