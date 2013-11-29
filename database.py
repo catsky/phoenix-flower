@@ -1,12 +1,13 @@
-from utils import timeformat
-
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, DateTime, Float, String
+from sqlalchemy import Column, Integer, Float, String
 from sqlalchemy.orm import sessionmaker, relationship, backref
 
+from utils import calculate_score, timeformat
 from config import DBCHOICE
+
 import os
+import time
 #Base class for OMR table
 _Base = declarative_base()
 
@@ -58,7 +59,7 @@ class ServiceDB():
             pass
         self.session = ServiceDB.Session()
    
-    def saveMoneyMinutes(self, tuple_in):
+    def saveMoneyMinute(self, tuple_in):
         moneyminutes = Money_Minute(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
         self.session.add(moneyminutes)
         self.session.commit()
@@ -77,7 +78,7 @@ class ServiceDB():
         query.reverse()
         return query
     
-    def saveMoneyHours(self, tuple_in):
+    def saveMoneyHour(self, tuple_in):
         moneyhours = Money_Hour(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
         self.session.add(moneyhours)
         self.session.commit()
@@ -96,10 +97,43 @@ class ServiceDB():
         return query
     
     def queryArticles(self, count=None):
+        print "in =f=="
         query = self.session.query(Article).order_by(Article.id.desc()).all()
+        now = time.time()
+        
+        for row in query:
+            if self.isFaved(article_id=row.id, user_id=row.user_id):
+                row.faved = True
+            else:
+                row.faved = False
+            delta_hours = int((now-row.timestamp)/3600)
+            hot = calculate_score(row.score, delta_hours)
+            row.hot = hot
+        query = sorted(query, reverse=True)       
+            
         if count != None:
             query = query[:count]
         return query
+    
+    
+    def isFaved(self, article_id, user_id):
+        exist = self.session.query(Favorite).filter_by(user_id=user_id, article_id=article_id).count()
+        if exist > 0:
+            return True
+        else:
+            return False
+        
+        
+    def saveFav(self, **data):
+        timestamp = time.time()
+        article_id = data['article_id']
+        user_id = data['user_id']
+        fav = Favorite(timestamp = timestamp, article_id = article_id, user_id = user_id)
+        self.session.add(fav)        
+        self.session.flush()
+        fav.article.score += 1
+        self.session.commit()    
+
 
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
@@ -137,8 +171,9 @@ class Article(_Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     URL = Column(String, nullable=False, unique=True)
-    score = Column(Integer)
-    hot = Column(Float)
+    score = Column(Integer, default=0)
+    hot = Column(Float, default=0.0)
+    timestamp = Column(Float, nullable=False)
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", backref=backref('articles', order_by=id))
@@ -146,6 +181,11 @@ class Article(_Base):
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     category = relationship("Category", backref=backref('articles', order_by=id))
     
+    def __cmp__(self, other):
+        if self.hot > other.hot:
+            return 1
+        else:
+            return -1
    
     def __repr__(self):
         print "<Article (%s)>" % (self.title)
@@ -154,31 +194,55 @@ class Category(_Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
-    
-    def __init__(self, name):
-        self.name = name
         
     def __repr__(self):
         print "<Category (%s)>" % (self.name)
         
+        
+class Favorite(_Base):
+    __tablename__ = 'favorites'
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(Float, nullable=False)
+    
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user = relationship("User", backref=backref('favorites', order_by=id))
+    
+    article_id = Column(Integer, ForeignKey('articles.id'), nullable=False)
+    article = relationship("Article", backref=backref('favorites', order_by=id))
+    
+    def __repr__(self):
+        print "<Favorite (%s, %s)>" % (self.user.name, self.article.title)
+     
 if __name__ == '__main__':
     db = ServiceDB()
+    import time
 #     query = db.queryArticles(30)
 #     for row in query:
 #         print row.title
 #         print type(row.user)
 #         if row.user is not None:
 #             print row.user
-    ken = User(name='ken',email='zhdhui@g.com',  password='gjffdd')
-    cat = Category(name='life')
+    import random
+    rstr = str(random.randint(0,100000))
+    
+    ken = User(name='ken'+rstr,email='zhdhui@g.com'+rstr,  password='gjffdd')
+    cat = Category(name='life'+rstr)
     db.session.add(ken)
     db.session.add(cat)
     db.session.flush()
-    art = Article(title="title", URL="link", user_id=ken.id, category_id=cat.id)
+    art = Article(title="title", URL="http://www.baidu.com/q="+rstr, 
+                  user_id=ken.id, category_id=cat.id,
+                  timestamp=time.time())
     db.session.add(art)
+    db.session.flush()
+    #fav = Favorite(timestamp=time.time(), user_id=ken.id, article_id=art.id)
+    data = dict(timestamp=time.time(), user_id=ken.id, article_id=art.id)
+    db.saveFav(**data)
+    art.score += 1
     db.session.commit()
 
-    
+    import sys
+    sys.exit()
 #     for row in db.queryMoneyMinutes():
 #         print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
 #     for row in db.queryMoneyHours():

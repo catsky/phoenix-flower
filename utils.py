@@ -10,3 +10,6 @@ def timeadjust(dt):
 def timeformat(timestamp):
     #tz = timezone("Australia/Sydney")
     return datetime.fromtimestamp(timestamp).isoformat()
+
+def calculate_score(votes, item_hour_age, gravity=1.8):  
+    return (votes - 1) / pow((item_hour_age+2), gravity)

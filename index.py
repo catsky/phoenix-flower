@@ -1,11 +1,13 @@
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 from crontab import CronTab
+import time
 
 from database import ServiceDB
 
 
 app = Flask(__name__)
+app.debug = True
 db = ServiceDB()
 
 def startCron():
@@ -34,11 +36,19 @@ def currrency(freq):
         cur2 = db.queryMoneyHours(24)
         return render_template('currency_all.html', currencies_min=cur1, currencies_hour=cur2)
 
+@app.route("/vote")
+def vote():
+    user_id = request.args['uid']
+    article_id = request.args['aid']
+    data = dict(user_id=int(user_id), article_id=int(article_id), timestamp=time.time())
+    db.saveFav(**data)
+    return render_template('news.html')
 
 @app.route("/")
 def index():
     query = db.queryArticles()
     return render_template('news.html', articles=query)
+
     
 if __name__ == "__main__":
     startCron()

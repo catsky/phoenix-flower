@@ -34,10 +34,10 @@ if __name__ == '__main__':
     money = getAUDCNY()
     db = ServiceDB()
     if option == '--minutes':
-        db.saveMoneyMinutes(money)
+        db.saveMoneyMinute(money)
         print "saved minutes!"
     elif option == '--hours':
-        db.saveMoneyHours(money)
+        db.saveMoneyHour(money)
         print "saved hours!"
     
    
