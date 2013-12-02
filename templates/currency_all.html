@@ -1,6 +1,17 @@
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{% extends "base.html" %}
+{% block title %}
+最新澳币人民币汇率图-半小时图-24小时图
+{% endblock %}
+
+  {% block main %}
+    <div id="chart_div1" style="width: 900px; height: 500px;"></div>
+    <div id="chart_div2" style="width: 900px; height: 500px;"></div>
+  {% endblock %}
+
+
+
+{% block script %}
+ <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
@@ -46,9 +57,4 @@
         chart2.draw(data2, options2);
       }
     </script>
-  </head>
-  <body>
-    <div id="chart_div1" style="width: 900px; height: 500px;"></div>
-    <div id="chart_div2" style="width: 900px; height: 500px;"></div>
-  </body>
-</html>
+{% endblock %}

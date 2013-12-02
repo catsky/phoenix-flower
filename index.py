@@ -44,10 +44,24 @@ def vote():
     db.saveFav(**data)
     return render_template('news.html')
 
-@app.route("/")
-def index():
-    query = db.queryArticles()
-    return render_template('news.html', articles=query)
+@app.route("/hot")
+def hot():
+    offset_str = request.args.get('offset', False)
+    if offset_str != False:
+        offset = int(offset_str)
+    else:
+        offset = 1
+    query = db.queryArticlesByHot(count=10, offset=offset)
+    return render_template('news.html', articles=query, view="hot")
+
+@app.route("/latest")
+def latest():
+    offset = 1
+    offset_str = request.args.get('offset', False)
+    if offset_str != False:
+        offset = int(offset_str)
+    query = db.queryArticlesByLatest(count=10, offset=offset)
+    return render_template('news.html', articles=query, view="latest")
 
     
 if __name__ == "__main__":

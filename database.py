@@ -63,6 +63,7 @@ class ServiceDB():
         moneyminutes = Money_Minute(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
         self.session.add(moneyminutes)
         self.session.commit()
+        self.session.close() 
     
     def queryMoneyMinutes(self, count=None):
         #return latest cur of last 30 minutes
@@ -96,11 +97,9 @@ class ServiceDB():
         query.reverse()
         return query
     
-    def queryArticles(self, count=None):
-        print "in =f=="
-        query = self.session.query(Article).order_by(Article.id.desc()).all()
+    def queryArticlesByHot(self, count=32, offset=0):
+        query = self.session.query(Article).all()
         now = time.time()
-        
         for row in query:
             if self.isFaved(article_id=row.id, user_id=row.user_id):
                 row.faved = True
@@ -110,11 +109,30 @@ class ServiceDB():
             hot = calculate_score(row.score, delta_hours)
             row.hot = hot
         query = sorted(query, reverse=True)       
-            
-        if count != None:
+        
+        for index, row in enumerate(query):
+            row.rowid = index + 1
+        if len(query) > offset:
+            query = query[offset-1:(count+offset+1)]
+        else:
             query = query[:count]
         return query
     
+    def queryArticlesByLatest(self, count=32, offset=0):
+        query = self.session.query(Article).order_by(Article.timestamp.desc()).all()
+        for row in query:
+            if self.isFaved(article_id=row.id, user_id=row.user_id):
+                row.faved = True
+            else:
+                row.faved = False
+        
+        for index, row in enumerate(query):
+            row.rowid = index + 1
+        if len(query) > offset:
+            query = query[offset-1:(count+offset+1)]
+        else:
+            query = query[:count]
+        return query
     
     def isFaved(self, article_id, user_id):
         exist = self.session.query(Favorite).filter_by(user_id=user_id, article_id=article_id).count()
@@ -132,7 +150,7 @@ class ServiceDB():
         self.session.add(fav)        
         self.session.flush()
         fav.article.score += 1
-        self.session.commit()    
+        self.session.commit()   
 
 
 class Money_Minute(_Base):
@@ -238,9 +256,7 @@ if __name__ == '__main__':
     #fav = Favorite(timestamp=time.time(), user_id=ken.id, article_id=art.id)
     data = dict(timestamp=time.time(), user_id=ken.id, article_id=art.id)
     db.saveFav(**data)
-    art.score += 1
-    db.session.commit()
-
+    db.session.close()
     import sys
     sys.exit()
 #     for row in db.queryMoneyMinutes():
