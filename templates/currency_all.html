@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 {% block title %}
-最新澳币人民币汇率图-半小时图-24小时图
+最新澳币人民币汇率图-半小时图-24小时图 (Sydney时间)
 {% endblock %}
-
-  {% block main %}
-    <div id="chart_div1" style="width: 900px; height: 500px;"></div>
-    <div id="chart_div2" style="width: 900px; height: 500px;"></div>
+  {% block main%}
+    <ul class="nav clearfix index-nav">
+                    <li {% if view == "hot" %}class="on"{% endif %}>
+                        <a href="/hot">热门</a>
+                    </li>
+                    <li {% if view == "latest" %}class="on"{% endif %}>
+                        <a href="/latest">最新</a>
+                    </li>
+                    <li {% if view == "currency" %}class="on"{% endif %}>
+                        <a href="/cur/all">澳币汇率</a>
+                    </li>
+                    <li {% if view == "submit" %}class="on"{% endif %}>
+                        <a href="/submit">>投稿</a>
+                    </li>
+    </ul>
+    <li><div id="chart_div1" style="width: 720px; height: 500px;"></div></li>
+    <li><div id="chart_div2" style="width: 720px; height: 500px;"></div></li>
   {% endblock %}
 
 
@@ -30,7 +43,7 @@
 
 
         var options1 = {
-          title: '半小时走势图-澳币人民币'
+          title: '半小时走势图-澳币人民币 (Sydney时间)',
         };
 
         var chart1 = new google.visualization.LineChart(document.getElementById('chart_div1'));
@@ -50,7 +63,7 @@
 
 
         var options2 = {
-          title: '24小时走势图-澳币人民币'
+          title: '24小时走势图-澳币人民币',
         };
 
         var chart2 = new google.visualization.LineChart(document.getElementById('chart_div2'));

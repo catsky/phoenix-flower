@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 
 def timeadjust(dt):
-    hours = timedelta(hours=9) # yohoo date is 9 hours faster than AU SYD
+    hours = timedelta(hours=8) # yohoo date is 9 hours faster than AU SYD
     return dt-hours
 
 def timeformat(timestamp):

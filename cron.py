@@ -32,12 +32,14 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--hours':
         option = '--hours'
     money = getAUDCNY()
-    db = ServiceDB()
+    #db = ServiceDB.instance()
+    from index import db
     if option == '--minutes':
         db.saveMoneyMinute(money)
         print "saved minutes!"
     elif option == '--hours':
         db.saveMoneyHour(money)
         print "saved hours!"
+    db.session.close()
     
    
