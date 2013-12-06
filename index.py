@@ -27,7 +27,6 @@ def startCron():
 @app.route("/cur/all", methods = ['GET', 'POST'])
 def currrency():
     cur1 = db.queryMoneyMinutes(30)
-    print "new query"
     cur2 = db.queryMoneyHours(24)
     db.session.commit()
     return render_template('currency_all.html', currencies_min=cur1, 
@@ -72,6 +71,24 @@ def latest():
     return render_template('news.html', articles=query,login=haslogin(), 
                            username=session.get('username',''), view="latest")
 
+@app.route("/signin", methods = ['GET', 'POST'])
+def signin():
+    if request.method == 'POST':
+        user = dict() 
+        user['email'] = request.form.get('account', '')
+        user['password'] = request.form.get('password', '')
+
+        islogined, q_user=  db.userLogin(**user)
+        if islogined:
+            session['username'] = q_user.name
+            return redirect(url_for('hot'))
+        else:
+            return redirect(url_for('signin'))
+    else:
+        return render_template('signin.html')
+    
+    
+    
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -89,6 +106,9 @@ def signout():
     session.pop('username', None)
     return redirect(url_for('hot'))
     
+@app.route("/submit", methods = ['GET', 'POST'])
+def submit():
+    return render_template('submit.html')
 
 if __name__ == "__main__":
     startCron()

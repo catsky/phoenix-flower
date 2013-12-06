@@ -207,6 +207,22 @@ class ServiceDB():
         finally:
             self.session.close()
     
+    def userLogin(self, **data):
+        try:
+            user = self.session.query(User).filter_by(email=data['email']).one()
+            if user is not None:
+                print "user is not NOne"
+                print user.password 
+                print data['password']  
+                if user.password == data['password']:
+                    return True, user
+            print "user is None"
+            return False, None
+        except:
+            self.session.rollback()
+        finally:
+            self.session.close()
+
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
     id = Column(Integer, primary_key=True)
@@ -287,10 +303,15 @@ class Favorite(_Base):
      
 if __name__ == '__main__':
     db = ServiceDB.instance()
-    import time
-    q=db.queryMoneyMinutes()
-    for i in q:
-        print i.id
+#     import time
+#     q=db.queryMoneyMinutes()
+#     for i in q:
+#         print i.id
+    user = dict(email="zhdhui@gmail.com", password="00121600")
+    b = db.userLogin(**user)
+    print type(b)
+#     c=db.queryMoneyHours()
+#     print c
 #     query = db.queryArticles(30)
 #     for row in query:
 #         print row.title
@@ -298,7 +319,7 @@ if __name__ == '__main__':
 #         if row.user is not None:
 #             print row.user
     #add user
-#     ken = dict(name='ken', email='zhdh@gmc.om', password='pass')
+#     ken = dict(name='kensdfa', email='zhdh@gmc.sdfom', password='pasdfss')
 #     db.addUser(**ken)
     #add article
 #     import random
