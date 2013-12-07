@@ -1,4 +1,6 @@
-from flask import Flask, request, redirect, url_for, session
+# -*- coding: utf-8 -*-
+
+from flask import Flask, request, redirect, url_for, session, flash
 from flask import render_template
 from crontab import CronTab
 import time
@@ -35,11 +37,14 @@ def currrency():
 
 @app.route("/vote")
 def vote():
-    user_id = request.args['uid']
-    article_id = request.args['aid']
+    user_id = request.args.get('uid', '')
+    
+    if user_id == '':
+        return redirect('/signin')
+    
+    article_id = request.args.get('aid', '') 
     data = dict(user_id=int(user_id), article_id=int(article_id), timestamp=time.time())
     db.saveFav(**data)
-    return render_template('news.html')
 
 def haslogin():
     if session.get('username', False):
@@ -57,9 +62,11 @@ def hot():
         offset = int(offset_str)
     else:
         offset = 1
-    query = db.queryArticlesByHot(count=10, offset=offset)
+    query = db.queryArticlesByHot(count=10, offset=offset, user_id=session.get('user_id',None))
     return render_template('news.html', articles=query, login=haslogin(), 
-                           username=session.get('username',''), view="hot")
+                           username=session.get('username',''), 
+                           user_id=session.get('user_id', ''),
+                           view="hot")
 
 @app.route("/latest")
 def latest():
@@ -67,9 +74,11 @@ def latest():
     offset_str = request.args.get('offset', False)
     if offset_str != False:
         offset = int(offset_str)
-    query = db.queryArticlesByLatest(count=10, offset=offset)
-    return render_template('news.html', articles=query,login=haslogin(), 
-                           username=session.get('username',''), view="latest")
+    query = db.queryArticlesByLatest(count = 10, offset = offset, user_id=session.get('user_id',None))
+    return render_template('news.html', articles = query,login=haslogin(), 
+                           username = session.get('username',''), 
+                           user_id=session.get('user_id', ''),
+                           view = "latest")
 
 @app.route("/signin", methods = ['GET', 'POST'])
 def signin():
@@ -81,6 +90,7 @@ def signin():
         islogined, q_user=  db.userLogin(**user)
         if islogined:
             session['username'] = q_user.name
+            session['user_id'] = q_user.id
             return redirect(url_for('hot'))
         else:
             return redirect(url_for('signin'))
@@ -96,19 +106,33 @@ def signup():
         user['name'] = request.form.get('name', '')
         user['email'] = request.form.get('email', '')
         user['password'] = request.form.get('password', '')
-        db.addUser(**user)
-        session['username'] =  user['name']
+        u = db.addUser(**user)
+        session['username'] =  u.name
+        session['user_id'] = u.id
         return redirect(url_for('hot'))
     return render_template('signup.html')
 
 @app.route("/signout")
 def signout():
     session.pop('username', None)
+    session.pop('user_id', None)
     return redirect(url_for('hot'))
     
 @app.route("/submit", methods = ['GET', 'POST'])
 def submit():
-    return render_template('submit.html')
+    cat = db.queryCategory()
+    if request.method == 'POST':
+        art = dict()
+        art['category_id'] = request.form.get('cat_id', '')
+        art['title'] = request.form.get('title', '')
+        art['URL'] = request.form.get('URL', '')
+        art['username'] = session.get('username','')
+        art['timestamp'] = time.time()
+        db.saveArticle(**art)
+        return redirect(url_for('hot'))
+    else:
+        return render_template('submit.html', categories=cat, login=haslogin(), 
+                           username=session.get('username',''))
 
 if __name__ == "__main__":
     startCron()

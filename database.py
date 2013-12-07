@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String
@@ -63,7 +64,7 @@ class ServiceDB():
             print "db path: " + self.dbconn_str
         elif DBCHOICE == "mysql":
             print "DBCHOICE =mysql"
-            self.dbconn_str = "mysql+mysqldb://%s:%s@%s:%s/%s"%(
+            self.dbconn_str = "mysql+mysqldb://%s:%s@%s:%s/%s?charset=utf8"%(
                                                 USERNAME,
                                                 PASSWORD,
                                                 DBHOST,
@@ -137,11 +138,11 @@ class ServiceDB():
         query.reverse()
         return query
     
-    def queryArticlesByHot(self, count=32, offset=0):
+    def queryArticlesByHot(self, count = 32, offset = 0, user_id = None):
         query = self.session.query(Article).all()
         now = time.time()
         for row in query:
-            if self.isFaved(article_id=row.id, user_id=row.user_id):
+            if user_id is not None and self.isFaved(article_id = row.id, user_id = user_id):
                 row.faved = True
             else:
                 row.faved = False
@@ -158,10 +159,11 @@ class ServiceDB():
             query = query[:count]
         return query
     
-    def queryArticlesByLatest(self, count=32, offset=0):
+    def queryArticlesByLatest(self, count = 32, offset = 0, user_id = None):
         query = self.session.query(Article).order_by(Article.timestamp.desc()).all()
+                
         for row in query:
-            if self.isFaved(article_id=row.id, user_id=row.user_id):
+            if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
                 row.faved = True
             else:
                 row.faved = False
@@ -172,6 +174,42 @@ class ServiceDB():
             query = query[offset-1:(count+offset+1)]
         else:
             query = query[:count]
+        return query
+
+
+    def saveArticle(self, **data):
+        category_id = data['category_id']
+        title = data['title']
+        URL = data['URL']
+        username = data['username']
+        timestamp = data['timestamp']
+        #get the user id
+        try:
+            #save article
+            user = self.session.query(User).filter_by(name=username).one()
+            if user is None:
+                return False
+            else:
+                user_id = user.id
+
+            art = Article(title = title, URL = URL,  user_id = user_id, 
+                          category_id = category_id, timestamp = timestamp)
+            self.session.add(art)
+            self.session.commit()
+            
+            #save fav
+            fav = dict(user_id = art.user_id, article_id = art.id)
+            self.saveFav(**fav)
+        except:
+            print "except"
+            self.session.rollback()
+            raise
+        finally:
+            print "close"
+            self.session.close()
+    
+    def queryCategory(self):
+        query = self.session.query(Category).all()
         return query
     
     def isFaved(self, article_id, user_id):
@@ -192,6 +230,7 @@ class ServiceDB():
             self.session.flush()
             fav.article.score += 1
             self.session.commit()
+            return fav
         except:
             self.session.rollback()
         finally:
@@ -211,12 +250,8 @@ class ServiceDB():
         try:
             user = self.session.query(User).filter_by(email=data['email']).one()
             if user is not None:
-                print "user is not NOne"
-                print user.password 
-                print data['password']  
                 if user.password == data['password']:
                     return True, user
-            print "user is None"
             return False, None
         except:
             self.session.rollback()
@@ -307,9 +342,15 @@ if __name__ == '__main__':
 #     q=db.queryMoneyMinutes()
 #     for i in q:
 #         print i.id
-    user = dict(email="zhdhui@gmail.com", password="00121600")
-    b = db.userLogin(**user)
-    print type(b)
+#     user = dict(email="zhdhui@gmail.com", password="00121600")
+#     b = db.userLogin(**user)
+#     print type(b)
+    cat = db.queryCategory()
+    for c in cat:
+        print c.id
+    cat = Category(name="生活x")
+    db.session.add(cat)
+    db.session.commit()
 #     c=db.queryMoneyHours()
 #     print c
 #     query = db.queryArticles(30)
@@ -339,7 +380,7 @@ if __name__ == '__main__':
 #     db.saveFav(**data)
 #     db.session.close()
     import sys
-    sys.exit()
+    sys.exit() 
 #     for row in db.queryMoneyMinutes():
 #         print "%s %s %s %s %s" % (row.name, row.timestamp, row.value, row.timeshow, row.annotation)
 #     for row in db.queryMoneyHours():
