@@ -129,9 +129,15 @@ def submit():
         art['username'] = session.get('username','')
         art['timestamp'] = time.time()
         db.saveArticle(**art)
-        return redirect(url_for('hot'))
+        return redirect(url_for('latest'))
     else:
         return render_template('submit.html', categories=cat, login=haslogin(), 
+                           username=session.get('username',''))
+
+@app.route("/user/<string:username>")
+def user_faved(username):
+    query = db.queryFavedArticles(username)
+    return render_template("user.html", favs = query, login=haslogin(), 
                            username=session.get('username',''))
 
 if __name__ == "__main__":

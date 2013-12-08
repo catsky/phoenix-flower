@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String
 from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.types import DECIMAL
-from utils import calculate_score, timeformat
+from utils import calculate_score, timeformat, formatURL
 from config import DBCHOICE, USERNAME, PASSWORD, DBHOST, DBPORT, DBNAME
 
 import os
@@ -103,14 +103,12 @@ class ServiceDB():
     def queryMoneyMinutes(self, count=30):
         #return latest cur of last 30 minutes
         query = self.session.query(Money_Minute).order_by(Money_Minute.id.desc()).limit(count).all()
-        print len(query)
         for index, row in enumerate(query):
             row.timeshow = timeformat(row.timestamp)
             if index % 3 == 0:
                 row.annotation = str(row.value)
             else:
                 row.annotation = ''
-            print '>>%s'%row.id
         query.reverse()
         
         return query
@@ -153,6 +151,7 @@ class ServiceDB():
         
         for index, row in enumerate(query):
             row.rowid = index + 1
+            row.shortURL = formatURL(row.URL)
         if len(query) > offset:
             query = query[offset-1:(count+offset+1)]
         else:
@@ -170,12 +169,24 @@ class ServiceDB():
         
         for index, row in enumerate(query):
             row.rowid = index + 1
+            row.shortURL = formatURL(row.URL)
+            
         if len(query) > offset:
             query = query[offset-1:(count+offset+1)]
         else:
             query = query[:count]
         return query
 
+    def queryFavedArticles(self, username):
+        q_user = self.session.query(User).filter_by(name=username).one()
+        if q_user:
+            user_id = q_user.id
+        q_article = self.session.query(Favorite).filter_by(user_id = user_id).order_by(Favorite.timestamp.desc()).all()
+        for index, row in enumerate(q_article):
+            row.rowid = index + 1
+            row.article.shortURL = formatURL(row.article.URL)
+        return q_article
+            
 
     def saveArticle(self, **data):
         category_id = data['category_id']
