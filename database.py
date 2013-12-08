@@ -9,6 +9,7 @@ from config import DBCHOICE, USERNAME, PASSWORD, DBHOST, DBPORT, DBNAME
 
 import os
 import time
+import decimal
 #Base class for OMR table
 _Base = declarative_base()
 
@@ -144,7 +145,7 @@ class ServiceDB():
                 row.faved = True
             else:
                 row.faved = False
-            delta_hours = int((now-row.timestamp)/3600)
+            delta_hours = int((decimal.Decimal(now)-row.timestamp)/3600)
             hot = calculate_score(row.score, delta_hours)
             row.hot = hot
         query = sorted(query, reverse=True)       
@@ -252,6 +253,7 @@ class ServiceDB():
             user = User(name=data['name'], email=data['email'], password=data['password'])
             self.session.add(user)
             self.session.commit()
+            return user.id
         except:
             self.session.rollback()
         finally:
@@ -307,7 +309,7 @@ class Article(_Base):
     URL = Column(String(200), nullable=False, unique=True)
     score = Column(Integer, default=0)
     hot = Column(Float, default=0.0)
-    timestamp = Column(Float, nullable=False)
+    timestamp = Column(DECIMAL, nullable=False)
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", backref=backref('articles', order_by=id))
@@ -336,7 +338,7 @@ class Category(_Base):
 class Favorite(_Base):
     __tablename__ = 'favorites'
     id = Column(Integer, primary_key=True)
-    timestamp = Column(Float, nullable=False)
+    timestamp = Column(DECIMAL, nullable=False)
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", backref=backref('favorites', order_by=id))

@@ -4,6 +4,7 @@ from flask import Flask, request, redirect, url_for, session, flash
 from flask import render_template
 from crontab import CronTab
 import time
+from datetime import datetime
 
 from database import ServiceDB
 
@@ -106,9 +107,9 @@ def signup():
         user['name'] = request.form.get('name', '')
         user['email'] = request.form.get('email', '')
         user['password'] = request.form.get('password', '')
-        u = db.addUser(**user)
-        session['username'] =  u.name
-        session['user_id'] = u.id
+        userid = db.addUser(**user)
+        session['username'] =  user['name']
+        session['user_id'] = userid
         return redirect(url_for('hot'))
     return render_template('signup.html')
 
@@ -139,6 +140,32 @@ def user_faved(username):
     query = db.queryFavedArticles(username)
     return render_template("user.html", favs = query, login=haslogin(), 
                            username=session.get('username',''))
+
+@app.template_filter()
+def timesince(timestamp, default=u"刚才"):
+    """
+    Returns string representing "time since" e.g.
+    3 days ago, 5 hours ago etc.
+    """
+    dt = datetime.fromtimestamp(timestamp)
+    now = datetime.now()
+    diff = now - dt
+    
+    periods = (
+        (diff.days / 365, u"年"),
+        (diff.days / 30, u"月"),
+        (diff.days / 7, u"星期"),
+        (diff.days, u"天"),
+        (diff.seconds / 3600, u"小时"),
+        (diff.seconds / 60, u"分钟"),
+        (diff.seconds, u"秒钟"),
+    )
+
+    for period, singular in periods:
+        if period:
+            return u"%d %s之前" % (period, singular)
+
+    return default
 
 if __name__ == "__main__":
     startCron()
