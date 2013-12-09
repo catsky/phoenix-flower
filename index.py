@@ -110,7 +110,7 @@ def signup():
         userid = db.addUser(**user)
         session['username'] =  user['name']
         session['user_id'] = userid
-        return redirect(url_for('hot'))
+        #return redirect(url_for('hot'))
     return render_template('signup.html')
 
 @app.route("/signout")
