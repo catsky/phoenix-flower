@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>News in Australia</title>
+  </head>
+  <body>
+    <ol>
+	 {% for article in articles %}
+	    <li> {{ article.title }} </li>
+	 {% endfor %}
+    </ol>
+  </body>
+</html>

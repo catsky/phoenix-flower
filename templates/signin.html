@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}
+ 登录
+{% endblock %}
+{% block style%}
+<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.css">
+{% endblock%}
+
+{%block main%}
+<ul class="body-nav">
+    <li>
+        <a href="/">
+            <i class="icon-home">
+            </i>
+            &nbsp;澳洲一刻
+        </a>
+    </li>
+</ul>
+<div class="organ signin nav-shadow clearfix">
+    <div class="organ-head">
+        登录
+    </div>
+    <div class="organ-body">
+        <form action="/signin" method="post" class="fm">
+            <input type="hidden" name="_xsrf" value="1d3a8a09b0f94aa7bd5fa65aec9ff416"
+            />
+            <div class="fm-row">
+                <div class="fm-item fm-required">
+                    <label class="fm-label" for="fm-account">
+                        邮箱
+                    </label>
+                    <input class="fm-text" id="fm-account" maxlength="30" name="account" size="30"
+                    type="text" value="">
+                </div>
+            </div>
+            <div class="fm-row">
+                <div class="fm-item fm-required">
+                    <label class="fm-label" for="fm-password">
+                        密码
+                    </label>
+                    <input class="fm-text" id="fm-password" maxlength="24" name="password"
+                    size="30" type="password" value="">
+                </div>
+            </div>
+            <div class="fm-action">
+                <button type="submit" class="btn">
+                    登录
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

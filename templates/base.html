@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/news.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/css/au.css">
+    {% block style%}{% endblock%}
+  </head>
+  <body>
+    <div id="shape" class="shape" style="width: 720px;">
+        <div id='head'>
+            <div class='logo'></div>
+            <ul class='menu'>
+                {% if login %}
+	                <li class='signin'><a href='/user/{{ username }}'> {{ username }} </a></li>
+                    <li class='signout'><a title='signout' href='/signout'>退出</a></li>
+                {% else %}
+                    <li class='signin'><a title='signin' href='/signin'>登陆</a></li>
+                    <li class='signup'><a title='signup' href='/signup'>注册</a></li>
+                {% endif %}
+               
+            </ul>
+        </div>
+        <div id='body'>          
+               {% block main %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class='footer'>
+        <div class="tc">
+        </div>
+    </div>
+  </body>
+{% block script %}{% endblock %}
+</html> 
