@@ -33,7 +33,7 @@
                             </span>
                             <span class='subLink'>({{ article.shortURL }}) 
                             </span>
-                         <div class='subtext'><span id=score_{{ article.id }}>{{ article.score }} point</span> -{{ article.user.name }}-{{article.timestamp|timesince}}-{{ article.category.name }}</div>
+                         <div class='subtext'><span id=score_{{ article.id }}>{{ article.score }} point by </span>{{ article.user.name }} {{article.timestamp|timesince}} in {{ article.category.name }}</div>
                     </li>
                     {% endfor %}
                     </ol>

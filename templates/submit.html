@@ -21,34 +21,41 @@
         投稿
     </div>
     <div class="organ-body">
-        <form action="/submit" method="post" class="fm">
+        <form id="submit_form" action="/submit" method="post" class="fm">
             <input type="hidden" name="_xsrf" value="1d3a8a09b0f94aa7bd5fa65aec9ff416"
             />
                 {% if not login %}
                   <div class="warning-msg">投稿前，请先登录哦：）</div>
                 {% endif %}
            <div class="fm-row">
-            <div class="fm-item fm-required">
-                <label for="fm-node_name" class="fm-label">
-                    类别
-                </label>
-                <select name="cat_id" id="fm-cat_name" data-placeholder="请选择一个类别"
-                class="fm-text chzn-done" style="width: 145px;" >
-                {% for cat in categories %}
-                    <option value="{{ cat.id }}">
-                        {{ cat.name }}
-                    </option>
-                 {% endfor %}
-                </select>
-            </div>
+                <div class="fm-item fm-required">
+                    <label for="fm-node_name" class="fm-label">
+                        类别
+                    </label>
+                    <select name="cat_id" id="cat_id"
+                    class="fm-text chzn-done" style="width: 145px;" >
+                        <option value="-1">
+                            请选择一个类别
+                        </option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}">
+                            {{ cat.name }}
+                        </option>
+                     {% endfor %}
+                    </select>
+                </div>
+                 <div class="fm-explain">给文章分类
+                </div>
             </div>
         <div class="fm-row">
             <div class="fm-item fm-required">
                 <label class="fm-label" for="fm-title">
                     标题
                 </label>
-                <input class="fm-text" id="fm-title" maxlength="100" name="title" size="30"
+                <input class="fm-text" id="title" maxlength="100" name="title" size="30"
                 type="text" value="">
+            </div>
+            <div class="fm-explain">输入标题或者描述
             </div>
         </div>
         <div class="fm-row">
@@ -56,8 +63,10 @@
                 <label class="fm-label" for="fm-url">
                     文章地址(URL)
                 </label>
-                <input class="fm-text" id="fm-url" maxlength="100" name="URL" size="30"
+                <input class="fm-text" id="URL" maxlength="100" name="URL" size="30"
                 type="text" value="">
+            </div>
+            <div class="fm-explain">文章地址
             </div>
         </div>
         <div class="status-msg">
@@ -71,4 +80,72 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js" type="text/javascript" charset="utf-8" ></script>
+
+<script>
+$(document).ready(function () {
+
+    $('#submit_form').validate({ // initialize the plugin
+        rules: {
+            cat_id: {
+                required: true,
+                range: [0, 100]
+            },
+
+            title: {
+				required: true,
+                maxlength: 20
+			},
+            URL: {
+				required: true,
+                url: true
+			},
+        },
+        messages: {
+            cat_id: {
+                range: "请给此文章一个类别吧",
+            },
+			title: {
+				required: "请输入文章标题或描述",
+                maxlength: jQuery.format("最多 {0} 个字"),
+			},
+			URL: {
+				required: "请输入文章地址",
+                url: "请输入有效的文章URL地址",
+			}
+        },
+        // the errorPlacement has to take the table layout into account
+		errorPlacement: function(error, element) {
+			if ( element.is(":radio") )
+				error.appendTo( element.parent().next().next() );
+			else if ( element.is(":checkbox") )
+				error.appendTo ( element.next() );
+			else
+                {
+                    element.parent().next().html('');
+				    error.appendTo( element.parent().next() );
+                }
+		},
+		// specifying a submitHandler prevents the default submit, good for the demo
+		// submitHandler: function() {
+		//	alert("submitted!");
+		// },
+		// set this class to error-labels to indicate valid fields
+		success: function(label) {
+			// set &nbsp; as text for IE
+			label.html("&nbsp;").addClass("checked");
+		},
+		highlight: function(element, errorClass) {
+			$(element).parent().next().find("." + errorClass).removeClass("checked");
+		}
+        
+    });
+
+});
+
+</script>
 {% endblock %}

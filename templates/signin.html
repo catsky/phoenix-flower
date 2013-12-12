@@ -21,16 +21,22 @@
         登录
     </div>
     <div class="organ-body">
-        <form action="/signin" method="post" class="fm">
+        <form id="signin_form" action="/signin" method="post" class="fm">
             <input type="hidden" name="_xsrf" value="1d3a8a09b0f94aa7bd5fa65aec9ff416"
             />
+            <div class="fm-row">
+                <div class="fm-explain"><div class="error"> {{ msg }} </div>
+                </div>
+            </div>
             <div class="fm-row">
                 <div class="fm-item fm-required">
                     <label class="fm-label" for="fm-account">
                         邮箱
                     </label>
-                    <input class="fm-text" id="fm-account" maxlength="30" name="account" size="30"
+                    <input class="fm-text" id="email" maxlength="30" name="email" size="30"
                     type="text" value="">
+                </div>
+                <div class="fm-explain">邮箱用于管理帐户
                 </div>
             </div>
             <div class="fm-row">
@@ -38,8 +44,10 @@
                     <label class="fm-label" for="fm-password">
                         密码
                     </label>
-                    <input class="fm-text" id="fm-password" maxlength="24" name="password"
+                    <input class="fm-text" id="password" maxlength="24" name="password"
                     size="30" type="password" value="">
+                </div>
+                <div class="fm-explain">输入密码
                 </div>
             </div>
             <div class="fm-action">
@@ -51,4 +59,64 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js" type="text/javascript" charset="utf-8" ></script>
+
+<script>
+$(document).ready(function () {
+
+    $('#signin_form').validate({ // initialize the plugin
+        rules: {
+            email: {
+				required: true,
+				email: true,
+			},
+            password: {
+				required: true,
+			},
+        },
+        messages: {
+			password: {
+				required: "请输入密码",
+                minlength: jQuery.format("最少 {0} 位"),
+				rangelength: jQuery.format("最少 {0} 位")
+			},
+			email: {
+				required: "请输入有效的email地址",
+                email: "请输入有效的email地址",
+			}
+        },
+        // the errorPlacement has to take the table layout into account
+		errorPlacement: function(error, element) {
+			if ( element.is(":radio") )
+				error.appendTo( element.parent().next().next() );
+			else if ( element.is(":checkbox") )
+				error.appendTo ( element.next() );
+			else
+                {
+                    element.parent().next().html('');
+				    error.appendTo( element.parent().next() );
+                }
+		},
+		// specifying a submitHandler prevents the default submit, good for the demo
+		// submitHandler: function() {
+		//	alert("submitted!");
+		// },
+		// set this class to error-labels to indicate valid fields
+		success: function(label) {
+			// set &nbsp; as text for IE
+			label.html("&nbsp;").addClass("checked");
+		},
+		highlight: function(element, errorClass) {
+			$(element).parent().next().find("." + errorClass).removeClass("checked");
+		}
+        
+    });
+
+});
+
+</script>
 {% endblock %}

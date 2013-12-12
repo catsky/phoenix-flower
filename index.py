@@ -86,7 +86,7 @@ def latest():
 def signin():
     if request.method == 'POST':
         user = dict() 
-        user['email'] = request.form.get('account', '')
+        user['email'] = request.form.get('email', '')
         user['password'] = request.form.get('password', '')
 
         islogined, q_user=  db.userLogin(**user)
@@ -95,7 +95,7 @@ def signin():
             session['user_id'] = q_user.id
             return redirect(url_for('hot'))
         else:
-            return redirect(url_for('signin'))
+            return render_template('signin.html', msg = "用户名或者密码不正确！")
     else:
         return render_template('signin.html')
     
@@ -111,14 +111,22 @@ def signup():
         userid = db.addUser(**user)
         session['username'] =  user['name']
         session['user_id'] = userid
-        #return redirect(url_for('hot'))
+        return redirect(url_for('hot'))
     return render_template('signup.html')
 
 @app.route("/emailcheck")
-def emailcheck():
+def emailcheck(): 
     email = request.args.get('email', False)
     print "email reciving->%s" % email 
     exist = db.emailcheck(email)
+    print "result is -> %s" % json.dumps(exist)
+    return json.dumps(exist)  
+
+@app.route("/usercheck")
+def usercheck(): 
+    name = request.args.get('name', False)
+    print "name reciving->%s" % name 
+    exist = db.usercheck(name)
     print "result is -> %s" % json.dumps(exist)
     return json.dumps(exist)  
 

@@ -261,7 +261,7 @@ class ServiceDB():
     
     def userLogin(self, **data):
         try:
-            user = self.session.query(User).filter_by(email=data['email']).one()
+            user = self.session.query(User).filter_by(email=data['email']).first()
             if user is not None:
                 if user.password == data['password']:
                     return True, user
@@ -284,7 +284,21 @@ class ServiceDB():
             self.session.rollback()
         finally:
             self.session.close()
-        
+    
+    def usercheck(self, username=None):
+        try: 
+            if username is not None: 
+                query = self.session.query(User).filter_by(name=username).first()
+                if query is not None:
+                    return u"该用户名已被使用"
+                else:
+                    return True
+            return "no values received."
+        except:
+            self.session.rollback()
+        finally:
+            self.session.close()
+
 
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
