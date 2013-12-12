@@ -5,6 +5,7 @@ from flask import render_template
 from crontab import CronTab
 import time
 from datetime import datetime
+import json
 
 from database import ServiceDB
 
@@ -112,6 +113,14 @@ def signup():
         session['user_id'] = userid
         #return redirect(url_for('hot'))
     return render_template('signup.html')
+
+@app.route("/emailcheck")
+def emailcheck():
+    email = request.args.get('email', False)
+    print "email reciving->%s" % email 
+    exist = db.emailcheck(email)
+    print "result is -> %s" % json.dumps(exist)
+    return json.dumps(exist)  
 
 @app.route("/signout")
 def signout():

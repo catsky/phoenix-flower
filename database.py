@@ -179,7 +179,7 @@ class ServiceDB():
         return query
 
     def queryFavedArticles(self, username):
-        q_user = self.session.query(User).filter_by(name=username).one()
+        q_user = self.session.query(User).filter_by(name=username).first()
         if q_user:
             user_id = q_user.id
         q_article = self.session.query(Favorite).filter_by(user_id = user_id).order_by(Favorite.timestamp.desc()).all()
@@ -267,9 +267,24 @@ class ServiceDB():
                     return True, user
             return False, None
         except:
+            self.session.rollback() 
+        finally:
+            self.session.close()
+    
+    def emailcheck(self, email=None):
+        try: 
+            if email is not None: 
+                query = self.session.query(User).filter_by(email=email).first()
+                if query is not None:
+                    return u"该邮箱已被使用"
+                else:
+                    return True
+            return "no values received."
+        except:
             self.session.rollback()
         finally:
             self.session.close()
+        
 
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'

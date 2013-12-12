@@ -39,6 +39,10 @@ a:hover {
     font-size: 16px;
     color: red;
 }
+
+.error {
+    color:#ff6600;
+}
 /**
  * head
  * */
