@@ -34,31 +34,37 @@ a:hover {
     border: 1px solid #e2e2e2;
 }
 
-.warning-msg {
-    text-align: center;
-    font-size: 16px;
-    color: red;
+.logo {
+    float: relative;
+    
 }
 
-.error {
-    color:#ff6600;
-}
 /**
  * head
  * */
 #head {
   position: relative;
   height: 40px;
-  padding: 20px;
-  background: url(/static/public/background/head_bg.jpg);
+  padding: 15px;
+  background: url(/static/public/background/head_bg.png);
   background-position: 50% 0px;
 }
 
 #head .menu {
     position: absolute;
     right: 20px;
-    top: 55px;
+    top: 45px;
 }
+
+#head .logotxt {
+    position: absolute;
+    left: 70px;
+    top: 30px;
+    font-size: 20px;
+    color: rgb(236, 236, 236);
+}
+
+
 #head .menu li {
     float: left;
     margin-left: 20px;
@@ -391,4 +397,18 @@ textarea {
 }
 .tc {
   text-align: center;
+}
+
+.warning-msg {
+    text-align: center;
+    font-size: 16px;
+    color: red;
+}
+
+.error {
+    color:#ff6600;
+}
+
+.highlight {
+    color:#ff6600;
 }

@@ -10,6 +10,7 @@ from config import DBCHOICE, USERNAME, PASSWORD, DBHOST, DBPORT, DBNAME
 import os
 import time
 import decimal
+import hashlib
 #Base class for OMR table
 _Base = declarative_base()
 
@@ -270,7 +271,10 @@ class ServiceDB():
 
     def addUser(self, **data):
         try:
-            user = User(name=data['name'], email=data['email'], password=data['password'])
+            m = hashlib.md5()
+            m.update(data['password'])
+            
+            user = User(name=data['name'], email=data['email'], password=m.hexdigest())
             self.session.add(user)
             self.session.commit()
             return user.id
@@ -282,8 +286,10 @@ class ServiceDB():
     def userLogin(self, **data):
         try:
             user = self.session.query(User).filter_by(email=data['email']).first()
+            m = hashlib.md5()
             if user is not None:
-                if user.password == data['password']:
+                m.update(data['password'])
+                if user.password == m.hexdigest():
                     return True, user
             return False, None
         except:
