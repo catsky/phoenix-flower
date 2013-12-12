@@ -178,6 +178,26 @@ class ServiceDB():
             query = query[:count]
         return query
 
+
+    def queryArticlesByCategory(self, catname, count = 10, offset = 0, user_id = None):
+        category = self.session.query(Category).filter_by(name=catname).first()
+        query = self.session.query(Article).filter_by(category_id=category.id).all()
+        for row in query:
+            if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
+                row.faved = True
+            else:
+                row.faved = False
+        
+        for index, row in enumerate(query):
+            row.rowid = index + 1
+            row.shortURL = formatURL(row.URL)
+            
+        if len(query) > offset:
+            query = query[offset-1:(count+offset+1)]
+        else:
+            query = query[:count]
+        return query
+
     def queryFavedArticles(self, username):
         q_user = self.session.query(User).filter_by(name=username).first()
         if q_user:

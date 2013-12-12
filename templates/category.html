@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 {% block title %}
-澳洲热文榜
+澳洲热门文章分类
 {% endblock %}
+{% block style%}
+<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.css"/>
+{% endblock%}
  {% block main%}
-                <ul class="nav clearfix index-nav">
-                                <li {% if view == "hot" %}class="on"{% endif %}>
-                                    <a href="/hot">热门</a>
-                                </li>
-                                <li {% if view == "latest" %}class="on"{% endif %}>
-                                    <a href="/latest">最新</a>
-                                </li>
-                                <li {% if view == "currency" %}class="on"{% endif %}>
-                                    <a href="/cur/all">澳币汇率</a>
-                                </li>
-                                <li>
-                                    <a style="color:#ff6600;" href="/submit">>投稿</a>
-                                </li>
+                <ul class="body-nav">
+                    <li>
+                        <a href="/">
+                            <i class="icon-home">
+                            </i>
+                            &nbsp;澳洲一刻
+                        </a>
+                    </li>
                 </ul>
                 <div class="organ topic-list">
+                    <div class="organ-head">
+                        文章分类:&nbsp;{{ catename }}
+                    </div>
                     <ol class="item-list">
                     {% for article in articles %}
                     <li class='item'> 
@@ -25,15 +26,16 @@
                             <span>{{ article.rowid }}.</span>
                             <span class='vote'>
                             {% if article.faved!=true %}
-                            <a id=up_{{ article.id }} {% if login %}onclick="return vote(this)" {% endif %} href="vote?uid={{ user_id }}&aid={{ article.id }}"><img src="static/public/img/grayarrow.png" border=0 vspace=3 hspace=2></a>
+                            <a id=up_{{ article.id }} {% if login %}onclick="return vote(this)" {% endif %} href="vote?uid={{ user_id }}&aid={{ article.id }}"><img src="/static/public/img/grayarrow.png" border=0 vspace=3 hspace=2></a>
                             {% endif %}
                             </span>
                             <span class='topic-title'>
-                                <a href="/category/{{ article.category.name }}" >[{{ article.category.name }}]</a>&nbsp;<a href={{ article.URL }} target=blank>{{ article.title }}</a> 
+                               <a href="{{ article.URL }}" target=blank>{{ article.title }}</a> 
                             </span>
                             <span class='subLink'>({{ article.shortURL }}) 
                             </span>
-                         <div class='subtext'><span id=score_{{ article.id }}>{{ article.score }} point by </span>{{ article.user.name }} {{article.timestamp|timesince}}</div>
+                            <div class='subtext'><span id=score_{{ article.id }}>{{ article.score }} point by </span>{{ article.user.name }} {{article.timestamp|timesince}} </div>
+                        </div>
                     </li>
                     {% endfor %}
                     </ol>

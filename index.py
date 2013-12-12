@@ -158,6 +158,23 @@ def user_faved(username):
     return render_template("user.html", favs = query, login=haslogin(), 
                            username=session.get('username',''))
 
+@app.route("/category/<string:catname>")
+def category(catname):
+    offset_str = request.args.get('offset', False)
+    if offset_str != False:
+        offset = int(offset_str)
+    else:
+        offset = 1
+    query = db.queryArticlesByCategory(catname, count=10, offset=offset, user_id=session.get('user_id',None))
+    return render_template('category.html', articles=query, login=haslogin(), 
+                           username=session.get('username',''), 
+                           user_id=session.get('user_id', ''),
+                           catename = catname
+                           )
+    
+    
+    
+
 @app.template_filter()
 def timesince(timestamp, default=u"刚才"):
     """
