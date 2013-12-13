@@ -249,6 +249,13 @@ a:hover {
     padding-top: 5px;
     float: left;
 }
+.fm-content {
+    display: inline-block;
+    padding-top: 5px;
+    margin-left: 10px;
+    color: rgb(51, 153, 51);
+    font-size: 15px;
+}
 .fm-explain {
     margin-left: 74px;
     color: rgb(156, 156, 156);

@@ -266,6 +266,15 @@ class ServiceDB():
         except:
             self.session.rollback()
 
+    def addCategory(self, name):
+        try:
+            cat = Category(name=name)
+            self.session.add(cat)
+            self.session.commit()
+        except:
+            self.session.rollback()
+        finally:
+            self.session.close()
     
     def isFaved(self, article_id, user_id):
         try:
@@ -342,6 +351,18 @@ class ServiceDB():
         except:
             self.session.rollback()
     
+    def catcheck(self, catname=None):
+        try: 
+            if catname is not None: 
+                query = self.session.query(Category).filter_by(name=catname).first()
+                if query is not None:
+                    return u"该类别名称已被使用"
+                else:
+                    return True
+            return "no values received."
+        except:
+            self.session.rollback()
+            
     def isadmin(self, username=None):
         try:
             if username is not None:

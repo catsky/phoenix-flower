@@ -125,6 +125,12 @@ def usercheck():
     exist = db.usercheck(name)
     return json.dumps(exist)  
 
+@app.route("/catcheck")
+def catcheck(): 
+    name = request.args.get('catname', False)
+    exist = db.catcheck(name)
+    return json.dumps(exist)  
+
 @app.route("/signout")
 def signout():
     session.pop('username', None)
@@ -175,11 +181,20 @@ def admin():
             username = session.get('username', '')
             if db.isadmin(username):
                 query = db.queryCategory()
-                return render_template('admin.html', categories = query)
-        
+                return render_template('admin.html', categories = query, login=haslogin(), 
+                           username=session.get('username',''))
         return redirect(url_for('hot'))
-    
-
+    elif request.method == 'POST':
+        if haslogin():
+            username = session.get('username', '')
+            if db.isadmin(username):
+                catname = request.form.get('catname', '') 
+                db.addCategory(catname)
+                query = db.queryCategory()
+                return render_template('admin.html', categories = query, login=haslogin(), 
+                           username=session.get('username',''))
+        return redirect(url_for('hot'))
+              
 @app.template_filter()
 def timesince(timestamp, default=u"刚才"):
     """
