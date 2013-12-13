@@ -351,13 +351,15 @@ textarea {
 
 .pagination ul {
   margin: 0 auto;
-  float: right;
+  float: left;
   background-color: white;
 }
 
 .pagination li {
   display: inline;
   line-height: 18px;
+  min-width: 100px;
+
 }
 
 .pagination a {
@@ -367,6 +369,8 @@ textarea {
   border-left: 1px solid #ddd;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+  min-width: 100px;
+  text-align: center;
 }
 
 .pagination a:hover {

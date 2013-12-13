@@ -6,9 +6,11 @@ from crontab import CronTab
 import time
 from datetime import datetime
 import json
+import logging
+from config import PAGESIZE
 
 from database import ServiceDB
-
+import weixin
 
 app = Flask(__name__)
 app.debug = True
@@ -63,7 +65,7 @@ def hot():
         offset = int(offset_str)
     else:
         offset = 1
-    query = db.queryArticlesByHot(count=10, offset=offset, user_id=session.get('user_id',None))
+    query = db.queryArticlesByHot(count=PAGESIZE, offset=offset, user_id=session.get('user_id',None))
     return render_template('news.html', articles=query, login=haslogin(), 
                            username=session.get('username',''), 
                            user_id=session.get('user_id', ''),
@@ -75,7 +77,7 @@ def latest():
     offset_str = request.args.get('offset', False)
     if offset_str != False:
         offset = int(offset_str)
-    query = db.queryArticlesByLatest(count = 10, offset = offset, user_id=session.get('user_id',None))
+    query = db.queryArticlesByLatest(count = PAGESIZE, offset = offset, user_id=session.get('user_id',None))
     return render_template('news.html', articles = query,login=haslogin(), 
                            username = session.get('username',''), 
                            user_id=session.get('user_id', ''),
@@ -166,7 +168,7 @@ def category(catname):
         offset = int(offset_str)
     else:
         offset = 1
-    query = db.queryArticlesByCategory(catname, count=10, offset=offset, user_id=session.get('user_id',None))
+    query = db.queryArticlesByCategory(catname, count=PAGESIZE, offset=offset, user_id=session.get('user_id',None))
     return render_template('category.html', articles=query, login=haslogin(), 
                            username=session.get('username',''), 
                            user_id=session.get('user_id', ''),
@@ -194,7 +196,88 @@ def admin():
                 return render_template('admin.html', categories = query, login=haslogin(), 
                            username=session.get('username',''))
         return redirect(url_for('hot'))
-              
+
+#wechat verify
+@app.route('/weixin', methods=['GET'])
+def weixin_access_verify():
+    echostr = request.args.get('echostr')
+    if weixin.verification(request) and echostr is not None:
+        return echostr
+    return 'access verification fail'
+
+#yixin verify
+@app.route('/yixin', methods=['GET'])
+def yixin_access_verify():
+    echostr = request.args.get('echostr')
+    if weixin.verification(request) and echostr is not None:
+        return echostr
+    return 'access verification fail'
+
+#msg from weixin 
+@app.route('/weixin', methods=['POST'])
+def weixin_msg():
+    logging.error("1.weixin: in weixin_msg ")
+    if weixin.verification(request):
+        logging.error("2.weixin verify done")
+        data = request.data
+        msg = weixin.parse_msg(data)
+        if weixin.user_subscribe_event(msg):
+            return weixin.help_info(msg)
+        elif weixin.is_text_msg(msg):
+            content = msg['Content']
+            if content == u'?' or content == u'？':
+                return weixin.help_info(msg)
+            elif (content == u'n' or content == u'N' 
+                 or content == u'new' or content == u'NEW'
+                 or content == u'New'):
+                posts = operatorDB.get_weixin_articles()
+                rmsg = weixin.response_news_msg(msg, posts)
+                logging.error("3.weixin get rmsg: %s"%rmsg)
+                return rmsg
+            elif (content == u'm' or content == u'M' 
+                 or content == u'money' or content == u'MONEY'
+                 or content == u'Money'):
+                return weixin.currency_info_AUDCNY(msg)
+#             else:
+#                 return weixin.help_info(msg)
+        elif weixin.is_location_msg(msg):
+            Label = msg['Label'] 
+            return weixin.help_info(msg)
+    return 'message processing fail'
+
+#msg from yixin server
+@app.route('/yixin', methods=['POST'])
+def yixin_msg():
+    logging.error("1.weixin: in weixin_msg ")
+    if weixin.verification(request):
+        logging.error("2.weixin verify done")
+        data = request.data
+        msg = weixin.parse_msg(data)
+        if weixin.user_subscribe_event(msg):
+            return weixin.help_info(msg)
+        elif weixin.is_text_msg(msg):
+            content = msg['Content']
+            if content == u'?' or content == u'？':
+                return weixin.help_info(msg)
+            elif (content == u'n' or content == u'N' 
+                 or content == u'new' or content == u'NEW'
+                 or content == u'New'):
+                posts = operatorDB.get_weixin_articles()
+                rmsg = weixin.response_news_msg(msg, posts)
+                logging.error("3.weixin get rmsg: %s"%rmsg)
+                return rmsg
+            elif (content == u'm' or content == u'M' 
+                 or content == u'money' or content == u'MONEY'
+                 or content == u'Money'):
+                return weixin.currency_info_AUDCNY(msg)
+#             else:
+#                 return weixin.help_info(msg)
+        elif weixin.is_location_msg(msg):
+            Label = msg['Label'] 
+            return weixin.help_info(msg)
+    return 'message processing fail'
+
+            
 @app.template_filter()
 def timesince(timestamp, default=u"刚才"):
     """
