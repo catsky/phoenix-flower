@@ -32,7 +32,6 @@ def startCron():
 def currrency():
     cur1 = db.queryMoneyMinutes(30)
     cur2 = db.queryMoneyHours(24)
-    db.session.commit()
     return render_template('currency_all.html', currencies_min=cur1, 
                            currencies_hour=cur2,  login=haslogin(), 
                            username=session.get('username',''), view="currency")
@@ -117,17 +116,13 @@ def signup():
 @app.route("/emailcheck")
 def emailcheck(): 
     email = request.args.get('email', False)
-    print "email reciving->%s" % email 
     exist = db.emailcheck(email)
-    print "result is -> %s" % json.dumps(exist)
     return json.dumps(exist)  
 
 @app.route("/usercheck")
 def usercheck(): 
     name = request.args.get('name', False)
-    print "name reciving->%s" % name 
     exist = db.usercheck(name)
-    print "result is -> %s" % json.dumps(exist)
     return json.dumps(exist)  
 
 @app.route("/signout")
@@ -172,7 +167,17 @@ def category(catname):
                            catename = catname
                            )
     
-    
+
+@app.route("/admin", methods = ['GET', 'POST'])   
+def admin():
+    if request.method == 'GET':
+        if haslogin():
+            username = session.get('username', '')
+            if db.isadmin(username):
+                query = db.queryCategory()
+                return render_template('admin.html', categories = query)
+        
+        return redirect(url_for('hot'))
     
 
 @app.template_filter()

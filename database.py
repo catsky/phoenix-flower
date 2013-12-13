@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Float, String
+from sqlalchemy import Column, Integer, Float, String, Boolean
 from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.types import DECIMAL
 from utils import calculate_score, timeformat, formatURL
@@ -104,16 +104,20 @@ class ServiceDB():
     
     def queryMoneyMinutes(self, count=30):
         #return latest cur of last 30 minutes
-        query = self.session.query(Money_Minute).order_by(Money_Minute.id.desc()).limit(count).all()
-        for index, row in enumerate(query):
-            row.timeshow = timeformat(row.timestamp)
-            if index % 3 == 0:
-                row.annotation = str(row.value)
-            else:
-                row.annotation = ''
-        query.reverse()
-        
-        return query
+        try:
+            query = self.session.query(Money_Minute).order_by(Money_Minute.id.desc()).limit(count).all()
+            for index, row in enumerate(query):
+                row.timeshow = timeformat(row.timestamp)
+                if index % 3 == 0:
+                    row.annotation = str(row.value)
+                else:
+                    row.annotation = ''
+            query.reverse()
+            return query
+        except:
+            self.session.rollback()
+        finally:
+            self.session.close()
     
     def saveMoneyHour(self, tuple_in):
         try:
@@ -126,88 +130,105 @@ class ServiceDB():
             self.session.close()
         
     def queryMoneyHours(self, count=None):
-        query = self.session.query(Money_Hour).order_by(Money_Hour.id.desc()).all()
-        for index, row in enumerate(query):
-            row.timeshow = timeformat(row.timestamp)
-            if index % 3 == 0:
-                row.annotation = str(row.value)
-            else:
-                row.annotation = ''
-        if count != None:
-            query = query[:count]
-        query.reverse()
-        return query
+        try:
+            query = self.session.query(Money_Hour).order_by(Money_Hour.id.desc()).all()
+            for index, row in enumerate(query):
+                row.timeshow = timeformat(row.timestamp)
+                if index % 3 == 0:
+                    row.annotation = str(row.value)
+                else:
+                    row.annotation = ''
+            if count != None:
+                query = query[:count]
+            query.reverse()
+            return query
+        except:
+            self.session.rollback()
     
     def queryArticlesByHot(self, count = 32, offset = 0, user_id = None):
-        query = self.session.query(Article).all()
-        now = time.time()
-        for row in query:
-            if user_id is not None and self.isFaved(article_id = row.id, user_id = user_id):
-                row.faved = True
+        try:
+            query = self.session.query(Article).all()
+            now = time.time()
+            for row in query:
+                if user_id is not None and self.isFaved(article_id = row.id, user_id = user_id):
+                    row.faved = True
+                else:
+                    row.faved = False
+                delta_hours = int((decimal.Decimal(now)-row.timestamp)/3600)
+                hot = calculate_score(row.score, delta_hours)
+                row.hot = hot
+            query = sorted(query, reverse=True)       
+            
+            for index, row in enumerate(query):
+                row.rowid = index + 1
+                row.shortURL = formatURL(row.URL)
+            if len(query) > offset:
+                query = query[offset-1:(count+offset+1)]
             else:
-                row.faved = False
-            delta_hours = int((decimal.Decimal(now)-row.timestamp)/3600)
-            hot = calculate_score(row.score, delta_hours)
-            row.hot = hot
-        query = sorted(query, reverse=True)       
-        
-        for index, row in enumerate(query):
-            row.rowid = index + 1
-            row.shortURL = formatURL(row.URL)
-        if len(query) > offset:
-            query = query[offset-1:(count+offset+1)]
-        else:
-            query = query[:count]
-        return query
+                query = query[:count]
+            return query
+        except:
+            self.session.rollback()
+
     
     def queryArticlesByLatest(self, count = 32, offset = 0, user_id = None):
-        query = self.session.query(Article).order_by(Article.timestamp.desc()).all()
-                
-        for row in query:
-            if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
-                row.faved = True
-            else:
-                row.faved = False
-        
-        for index, row in enumerate(query):
-            row.rowid = index + 1
-            row.shortURL = formatURL(row.URL)
+        try:
+            query = self.session.query(Article).order_by(Article.timestamp.desc()).all()
+                    
+            for row in query:
+                if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
+                    row.faved = True
+                else:
+                    row.faved = False
             
-        if len(query) > offset:
-            query = query[offset-1:(count+offset+1)]
-        else:
-            query = query[:count]
-        return query
+            for index, row in enumerate(query):
+                row.rowid = index + 1
+                row.shortURL = formatURL(row.URL)
+                
+            if len(query) > offset:
+                query = query[offset-1:(count+offset+1)]
+            else:
+                query = query[:count]
+            return query
+        except:
+            self.session.rollback()
 
 
     def queryArticlesByCategory(self, catname, count = 10, offset = 0, user_id = None):
-        category = self.session.query(Category).filter_by(name=catname).first()
-        query = self.session.query(Article).filter_by(category_id=category.id).all()
-        for row in query:
-            if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
-                row.faved = True
-            else:
-                row.faved = False
-        
-        for index, row in enumerate(query):
-            row.rowid = index + 1
-            row.shortURL = formatURL(row.URL)
+        try:
+            category = self.session.query(Category).filter_by(name=catname).first()
+            query = self.session.query(Article).filter_by(category_id=category.id).all()
+            for row in query:
+                if user_id is not None and self.isFaved(article_id=row.id, user_id=user_id):
+                    row.faved = True
+                else:
+                    row.faved = False
             
-        if len(query) > offset:
-            query = query[offset-1:(count+offset+1)]
-        else:
-            query = query[:count]
-        return query
+            for index, row in enumerate(query):
+                row.rowid = index + 1
+                row.shortURL = formatURL(row.URL)
+                
+            if len(query) > offset:
+                query = query[offset-1:(count+offset+1)]
+            else:
+                query = query[:count]
+            return query
+        except:
+            self.session.rollback()
+
 
     def queryFavedArticles(self, username):
-        q_user = self.session.query(User).filter_by(name=username).first()
-        if q_user:
-            user_id = q_user.id
-        q_article = self.session.query(Favorite).filter_by(user_id = user_id).order_by(Favorite.timestamp.desc()).all()
-        for index, row in enumerate(q_article):
-            row.rowid = index + 1
-            row.article.shortURL = formatURL(row.article.URL)
-        return q_article
+        try:
+            q_user = self.session.query(User).filter_by(name=username).first()
+            if q_user:
+                user_id = q_user.id
+            q_article = self.session.query(Favorite).filter_by(user_id = user_id).order_by(Favorite.timestamp.desc()).all()
+            for index, row in enumerate(q_article):
+                row.rowid = index + 1
+                row.article.shortURL = formatURL(row.article.URL)
+            return q_article
+        except:
+            self.session.rollback()
             
 
     def saveArticle(self, **data):
@@ -234,23 +255,27 @@ class ServiceDB():
             fav = dict(user_id = art.user_id, article_id = art.id)
             self.saveFav(**fav)
         except:
-            print "except"
             self.session.rollback()
             raise
-        finally:
-            print "close"
-            self.session.close()
+
     
     def queryCategory(self):
-        query = self.session.query(Category).all()
-        return query
+        try:
+            query = self.session.query(Category).all()
+            return query
+        except:
+            self.session.rollback()
+
     
     def isFaved(self, article_id, user_id):
-        exist = self.session.query(Favorite).filter_by(user_id=user_id, article_id=article_id).count()
-        if exist > 0:
-            return True
-        else:
-            return False
+        try:
+            exist = self.session.query(Favorite).filter_by(user_id=user_id, article_id=article_id).count()
+            if exist > 0:
+                return True
+            else:
+                return False
+        except:
+            self.session.rollback()
         
         
     def saveFav(self, **data):
@@ -266,8 +291,6 @@ class ServiceDB():
             return fav
         except:
             self.session.rollback()
-        finally:
-            self.session.close()   
 
     def addUser(self, **data):
         try:
@@ -294,8 +317,6 @@ class ServiceDB():
             return False, None
         except:
             self.session.rollback() 
-        finally:
-            self.session.close()
     
     def emailcheck(self, email=None):
         try: 
@@ -308,8 +329,6 @@ class ServiceDB():
             return "no values received."
         except:
             self.session.rollback()
-        finally:
-            self.session.close()
     
     def usercheck(self, username=None):
         try: 
@@ -322,9 +341,16 @@ class ServiceDB():
             return "no values received."
         except:
             self.session.rollback()
-        finally:
-            self.session.close()
-
+    
+    def isadmin(self, username=None):
+        try:
+            if username is not None:
+                query = self.session.query(User).filter_by(name=username).first()
+                if query is not None and query.isadmin == True:
+                    return True
+            return False
+        except:
+            self.session.rollback()
 
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
@@ -352,6 +378,7 @@ class User(_Base):
     name = Column(String(50), nullable=False, unique=True)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
+    isadmin = Column(Boolean, default=False)
        
     def __repr__(self):
         print "<User (%s, %s, %s)>" % (self.name, self.email, self.password)
