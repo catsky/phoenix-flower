@@ -405,6 +405,18 @@ class ServiceDB():
         except:
             self.session.rollback()
             
+    def URLcheck(self, urlname=None):
+        try: 
+            if urlname is not None: 
+                query = self.session.query(Article).filter_by(name=urlname).first()
+                if query is not None:
+                    return u"该URL的文章已经被其他小伙伴分享过了：）"
+                else:
+                    return True
+            return "no values received."
+        except:
+            self.session.rollback()
+            
     def isadmin(self, username=None):
         try:
             if username is not None:

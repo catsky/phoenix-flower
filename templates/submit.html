@@ -102,7 +102,8 @@ $(document).ready(function () {
 			},
             URL: {
 				required: true,
-                url: true
+                url: true,
+                remote: "urlcheck"
 			},
         },
         messages: {
@@ -116,6 +117,7 @@ $(document).ready(function () {
 			URL: {
 				required: "请输入文章地址",
                 url: "请输入有效的文章URL地址",
+                remote: jQuery.format("该URL的文章已经被其他小伙伴分享过了：）")
 			}
         },
         // the errorPlacement has to take the table layout into account
