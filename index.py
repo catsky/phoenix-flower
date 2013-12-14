@@ -228,7 +228,7 @@ def yixin_access_verify():
         return echostr
     return 'access verification fail'
 
-#msg from weixin 
+#message returned from weixin server
 @app.route('/weixin', methods=['POST'])
 def weixin_msg():
     logging.error("1.weixin: in weixin_msg ")
@@ -260,7 +260,7 @@ def weixin_msg():
             return weixin.help_info(msg)
     return 'message processing fail'
 
-#msg from yixin server
+#message returned from yixin server
 @app.route('/yixin', methods=['POST'])
 def yixin_msg():
     logging.error("1.weixin: in weixin_msg ")
