@@ -11,6 +11,7 @@ import os
 import time
 import decimal
 import hashlib
+import math
 #Base class for OMR table
 _Base = declarative_base()
 
@@ -145,7 +146,7 @@ class ServiceDB():
         except:
             self.session.rollback()
     
-    def queryArticlesByHot(self, count = 32, offset = 0, user_id = None):
+    def queryArticlesByHot(self, pagesize = 32, page = 1, user_id = None):
         try:
             query = self.session.query(Article).all()
             now = time.time()
@@ -161,17 +162,38 @@ class ServiceDB():
             
             for index, row in enumerate(query):
                 row.rowid = index + 1
-                row.shortURL = formatURL(row.URL)
-            if len(query) > offset:
-                query = query[offset-1:(count+offset+1)]
+                row.shortURL = formatURL(row.URL)           
+            
+            totalpage = int(math.ceil(len(query)/pagesize))
+            nextpagenum = 1
+            privouspagenum = 1
+            if totalpage > 1:
+                if page >= totalpage:
+                    hasnextpage = False
+                    hasprivouspage = True
+                    privouspagenum = totalpage - 1  
+                elif page <= 1:
+                    hasnextpage = True
+                    hasprivouspage = False
+                    nextpagenum = 2 
+                else:
+                    hasnextpage = True
+                    hasprivouspage = True
+                    privouspagenum = page - 1  
+                    nextpagenum = page + 1  
             else:
-                query = query[:count]
-            return query
+                hasnextpage = False
+                hasprivouspage = False
+                
+            
+            query = query[pagesize*(page-1):pagesize*page]
+            
+            return query, hasnextpage, nextpagenum, hasprivouspage, privouspagenum
         except:
             self.session.rollback()
 
     
-    def queryArticlesByLatest(self, count = 32, offset = 0, user_id = None):
+    def queryArticlesByLatest(self, pagesize = 32, page = 1, user_id = None):
         try:
             query = self.session.query(Article).order_by(Article.timestamp.desc()).all()
                     
@@ -185,11 +207,31 @@ class ServiceDB():
                 row.rowid = index + 1
                 row.shortURL = formatURL(row.URL)
                 
-            if len(query) > offset:
-                query = query[offset-1:(count+offset+1)]
+            totalpage = int(math.ceil(len(query)/pagesize))
+            nextpagenum = 1
+            privouspagenum = 1
+            if totalpage > 1:
+                if page >= totalpage:
+                    hasnextpage = False
+                    hasprivouspage = True
+                    privouspagenum = totalpage - 1  
+                elif page <= 1:
+                    hasnextpage = True
+                    hasprivouspage = False
+                    nextpagenum = 2 
+                else:
+                    hasnextpage = True
+                    hasprivouspage = True
+                    privouspagenum = page - 1  
+                    nextpagenum = page + 1  
             else:
-                query = query[:count]
-            return query
+                hasnextpage = False
+                hasprivouspage = False
+                
+            
+            query = query[pagesize*(page-1):pagesize*page]
+            
+            return query, hasnextpage, nextpagenum, hasprivouspage, privouspagenum
         except:
             self.session.rollback()
 

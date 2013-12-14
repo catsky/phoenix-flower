@@ -60,28 +60,37 @@ def index():
 
 @app.route("/hot")
 def hot():
-    offset_str = request.args.get('offset', False)
-    if offset_str != False:
-        offset = int(offset_str)
+    pagestr = request.args.get('page', False)
+    if pagestr != False:
+        page = int(pagestr)
     else:
-        offset = 1
-    query = db.queryArticlesByHot(count=PAGESIZE, offset=offset, user_id=session.get('user_id',None))
-    return render_template('news.html', articles=query, login=haslogin(), 
-                           username=session.get('username',''), 
-                           user_id=session.get('user_id', ''),
-                           view="hot")
+        page = 1
+    query, hasnextpage, nextpagenum, hasprivouspage, privouspagenum = db.queryArticlesByHot(pagesize = PAGESIZE, 
+                                                                                            page = page, 
+                                                                                            user_id = session.get('user_id',None))
+    return render_template('news.html', articles = query, login = haslogin(), 
+                           username = session.get('username',''), 
+                           user_id = session.get('user_id', ''),
+                           view = "hot", hasnextpage = hasnextpage,
+                           nextpagenum = nextpagenum, hasprivouspage = hasprivouspage,
+                           privouspagenum = privouspagenum)
 
 @app.route("/latest")
 def latest():
-    offset = 1
-    offset_str = request.args.get('offset', False)
-    if offset_str != False:
-        offset = int(offset_str)
-    query = db.queryArticlesByLatest(count = PAGESIZE, offset = offset, user_id=session.get('user_id',None))
+    pagestr = request.args.get('page', False)
+    if pagestr != False:
+        page = int(pagestr)
+    else:
+        page = 1
+    query, hasnextpage, nextpagenum, hasprivouspage, privouspagenum = db.queryArticlesByLatest(pagesize = PAGESIZE, 
+                                                                                               page = page, 
+                                                                                               user_id = session.get('user_id',None))
     return render_template('news.html', articles = query,login=haslogin(), 
                            username = session.get('username',''), 
                            user_id=session.get('user_id', ''),
-                           view = "latest")
+                           view = "latest",hasnextpage = hasnextpage,
+                           nextpagenum = nextpagenum, hasprivouspage = hasprivouspage,
+                           privouspagenum = privouspagenum)
 
 @app.route("/signin", methods = ['GET', 'POST'])
 def signin():

@@ -43,9 +43,16 @@
                 </div>
                 <div class="pagination">
                     <ul>
+                        {% if hasprivouspage %}
                         <li class="next">
-                        <a href="/?page=2">下一页</a>
+                        <a href="/latest?page={{ privouspagenum }}">上一页</a>
                         </li>
+                        {% endif %}
+                        {% if hasnextpage %}
+                        <li class="next">
+                        <a href="/latest?page={{ nextpagenum }}">下一页</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
 {% endblock %}
