@@ -396,6 +396,7 @@ textarea {
 
 .footer {
   padding: 10px;
+    margin: 5px auto;
 }
 #footer {
   padding: 16px;
@@ -406,8 +407,11 @@ textarea {
   color: rgb(146, 146, 146);
   text-shadow: 1px 1px 0px #ffffff;
 }
-.tc {
-  text-align: center;
+.footnote {
+  float:left;
+  text-align: left;
+  color: #A3A3A3;
+  
 }
 
 .warning-msg {
