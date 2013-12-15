@@ -150,7 +150,8 @@ def catcheck():
 @app.route("/urlcheck")
 def urlcheck(): 
     url = request.args.get('URL', False)
-    exist = db.URLcheck(url)
+    print url
+    exist = db.URLcheck(url) 
     return json.dumps(exist) 
 
 @app.route("/signout")
@@ -161,7 +162,7 @@ def signout():
     
 @app.route("/submit", methods = ['GET', 'POST'])
 def submit():
-    cat = db.queryCategory()
+    cat = db.queryCategory() 
     if request.method == 'POST':
         art = dict()
         art['category_id'] = request.form.get('cat_id', '')

@@ -408,7 +408,7 @@ class ServiceDB():
     def URLcheck(self, urlname=None):
         try: 
             if urlname is not None: 
-                query = self.session.query(Article).filter_by(name=urlname).first()
+                query = self.session.query(Article).filter_by(URL=urlname).first()
                 if query is not None:
                     return u"该URL的文章已经被其他小伙伴分享过了：）"
                 else:
@@ -463,7 +463,7 @@ class Article(_Base):
     __tablename__ = 'articles'
     id = Column(Integer, primary_key=True)
     title = Column(String(100), nullable=False)
-    URL = Column(String(200), nullable=False, unique=True)
+    URL = Column(String(512), nullable=False)
     score = Column(Integer, default=0)
     hot = Column(Float, default=0.0)
     timestamp = Column(DECIMAL, nullable=False)
