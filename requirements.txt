@@ -1,4 +1,0 @@
-MySQL-python==1.2.4
-Flask==0.10.1
-SQLAlchemy==0.8.4
-python-crontab==0.6.0
