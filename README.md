@@ -11,7 +11,7 @@ Sorry, not now. We are working on it.
 recommend to install this app on your LEMP server
 
 1. mysql php nginx install:
-https://www.digitalocean.com/community/articles/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu
+https://www.digitalocean.com/community/articles/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
 
 2. phpmyadmin nginx
 https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-lemp-server/
