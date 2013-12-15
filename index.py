@@ -4,10 +4,11 @@ from flask import Flask, request, redirect, url_for, session, flash
 from flask import render_template
 from crontab import CronTab
 import time
+import os
 from datetime import datetime
 import json
 import logging
-from config import PAGESIZE
+from config import PAGESIZE, SYSUSER, PYTHON_VIRTUAL
 
 from database import ServiceDB
 import weixin
@@ -17,12 +18,16 @@ app.debug = True
 app.secret_key = 'iyxi33yk1m12jl4lmyzh2w0zljl0yk2wl3w52l2x'
 db = ServiceDB.instance()
 
+
 def startCron():
-    cron = CronTab('catsky')
-    cron.remove_all('/usr/bin/python')
-    job1 = cron.new(command='/usr/bin/python /home/catsky/Desktop/workspace/phoenix-flower/cron.py')
+    cron = CronTab(SYSUSER)
+    cron.remove_all(PYTHON_VIRTUAL)
+    cron.write()
+    filepath = os.path.realpath(__file__)
+    dirname = os.path.dirname(filepath)
+    job1 = cron.new(command='%s %s/cron.py' % (PYTHON_VIRTUAL, dirname))
     job1.every().minute()
-    job2 = cron.new(command='/usr/bin/python /home/catsky/Desktop/workspace/phoenix-flower/cron.py --hours')
+    job2 = cron.new(command='%s %s/cron.py --hours' % (PYTHON_VIRTUAL, dirname))
     job2.every().hour()
     cron.write()
     print 'cron job started as the following'

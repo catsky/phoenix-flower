@@ -1,5 +1,7 @@
 
 DBCHOICE = "mysql" #sqlite, mysql
+SYSUSER = "catsky" #os login username
+PYTHON_VIRTUAL = "/usr/bin/python"
 
 USERNAME = 'root'
 PASSWORD = '1234'
