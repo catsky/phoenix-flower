@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}
+澳洲热门文章分类
+{% endblock %}
+{% block style%}
+<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.css"/>
+{% endblock%}
+ {% block main%}
+                <ul class="body-nav">
+                    <li>
+                        <a href="/">
+                            <i class="icon-home">
+                            </i>
+                            &nbsp;澳洲一刻
+                        </a>
+                    </li>
+                </ul>
+                <div class="organ topic-list">
+                    <div class="organ-head">
+                        文章分类:&nbsp;{{ catename }}
+                    </div>
+                    <ol class="item-list">
+                    {% for article in articles %}
+                    <li class='item'> 
+                        <div class='textline'>
+                            <span>{{ article.rowid }}.</span>
+                            <span class='vote'>
+                            {% if article.faved!=true %}
+                            <a id=up_{{ article.id }} {% if login %}onclick="return vote(this)" {% endif %} href="vote?uid={{ user_id }}&aid={{ article.id }}"><img src="/static/public/img/grayarrow.png" border=0 vspace=3 hspace=2></a>
+                            {% endif %}
+                            </span>
+                            <span class='topic-title'>
+                               <a href="{{ article.URL }}" target=blank>{{ article.title }}</a> 
+                            </span>
+                            <span class='subLink'>({{ article.shortURL }}) 
+                            </span>
+                            <div class='subtext'><span id=score_{{ article.id }}>{{ article.score }} point by </span>{{ article.user.name }} {{article.timestamp|timesince}} </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    </ol>
+                </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+        function byId(id) {
+          return document.getElementById(id);
+        }
+
+        function vote(node) {
+          var v = node.id.split(/_/);   // {'up', '123'}
+          var item = v[1];
+
+          // adjust score
+          var score = byId('score_' + item);
+          var newscore = parseInt(score.innerHTML) + (v[0] == 'up' ? 1 : -1);
+          score.innerHTML = newscore + (newscore == 1 ? ' point' : ' points');
+
+          // hide arrows
+          byId('up_'   + item).style.visibility = 'hidden';
+          try { byId('down_' + item).style.visibility = 'hidden'; }
+          catch(err) {} // ignore
+
+          // ping server
+          var ping = new Image();
+          ping.src = node.href;
+
+          return false; // cancel browser nav
+        } 
+    </script>
+{% endblock %}

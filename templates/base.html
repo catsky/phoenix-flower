@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/news.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/css/au.css">
+    {% block style%}{% endblock%}
+  </head>
+  <body>
+    <div id="shape" class="shape" style="width: 720px;">
+        <div id='head'>
+            <div class='logo'><a href='/'><img src='/static/public/img/48png.png' /></a></div>
+            <div class='logotxt'>澳洲一刻</div>
+            <ul class='menu'>
+                {% if login %}
+	                <li class='signin'><a href='/user/{{ username }}'> {{ username }} </a></li>
+                    <li class='signout'><a title='signout' href='/signout'>退出</a></li>
+                {% else %}
+                    <li class='signin'><a title='signin' href='/signin'>登陆</a></li>
+                    <li class='signup'><a title='signup' href='/signup'>注册</a></li>
+                {% endif %}
+               
+            </ul>
+        </div>
+        <div id='body'>          
+               {% block main %}{% endblock %}
+        </div>
+        
+    </div>
+    <div class='footer' style="width: 720px;">
+        <div class="footnote"><p>澳洲一刻小伙伴们的社区♥ Made in Australia</p><p>Powered By <a href="https://github.com/catsky/phoenix-flower" target=blank>phoenix-flower</a> on Github</p></div>
+        <div style="float:right;"><a href="https://www.digitalocean.com/?refcode=632548336b0b" target="_blank"><img src="/static/public/img/do.png" width="64" border="0" alt="DigitalOcean" /></a>
+        </div>
+    </div>
+  </body>
+{% block script %}{% endblock %}
+</html> 

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}
+澳洲热文榜
+{% endblock %}
+{% block style%}
+<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.css"/>
+{% endblock%}
+ {% block main%}
+                <ul class="body-nav">
+                    <li>
+                        <a href="/">
+                            <i class="icon-home">
+                            </i>
+                            &nbsp;澳洲一刻
+                        </a>
+                    </li>
+                </ul>
+                <div class="organ topic-list">
+                    <div class="organ-head">
+                        我的收藏
+                    </div>
+                    <ol class="item-list">
+                    {% for fav in favs %}
+                    <li class='item'> 
+                        <div class='textline'>
+                            <span>{{ fav.rowid }}.</span>
+                            <span class='vote'>
+                            </span>
+                            <span class='topic-title'>
+                                <a href={{ fav.article.URL }} target=blank>{{ fav.article.title }}</a> 
+                            </span>
+                            <span class='subLink'>({{ fav.article.shortURL }}) 
+                            </span>
+                         <div class='subtext'><span>{{ fav.article.score }} point</span> -{{ fav.article.user.name }}-{{ fav.article.category.name }} | <a href="/comments?id={{ fav.article.id }}">comment</a></div>
+                    </li>
+                    {% endfor %}
+                    </ol>
+                </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+        function byId(id) {
+          return document.getElementById(id);
+        }
+
+        function vote(node) {
+          var v = node.id.split(/_/);   // {'up', '123'}
+          var item = v[1];
+
+          // adjust score
+          var score = byId('score_' + item);
+          var newscore = parseInt(score.innerHTML) + (v[0] == 'up' ? 1 : -1);
+          score.innerHTML = newscore + (newscore == 1 ? ' point' : ' points');
+
+          // hide arrows
+          byId('up_'   + item).style.visibility = 'hidden';
+          try { byId('down_' + item).style.visibility = 'hidden'; }
+          catch(err) {} // ignore
+
+          // ping server
+          var ping = new Image();
+          ping.src = node.href;
+
+          return false; // cancel browser nav
+        } 
+    </script>
+{% endblock %}

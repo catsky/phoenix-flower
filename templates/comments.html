@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}
+评论
+{% endblock %}
+{% block style%}
+<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.css"/>
+{% endblock%}
+
+{%block main%}
+<ul class="body-nav">
+    <li>
+        <a href="/">
+            <i class="icon-home">
+            </i>
+            &nbsp;澳洲一刻
+        </a>
+    </li>
+</ul>
+<div class="organ topic-create nav-shadow clearfix">
+    <div class="organ-head">
+        评论 - <a href="{{ article.URL }}" target=blank>{{ article.title}}</a>
+    </div>
+    <div class="organ-body">
+        
+    </div>
+</div>
+ <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'australiamoment'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+{% endblock %}
