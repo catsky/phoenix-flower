@@ -9,4 +9,4 @@ DBHOST = 'localhost'
 DBPORT = '3306'
 DBNAME = 'phoenixflower'
 
-PAGESIZE = 10
+PAGESIZE = 11
