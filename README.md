@@ -55,5 +55,7 @@ pip install -r requirements.txt
 python index.py
 ```
 
+13. access this app via http://localhost:5000  ENJOY!
+
 ##License
 MIT
