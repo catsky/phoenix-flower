@@ -31,7 +31,7 @@
                             </span>
                             <span class='subLink'>({{ fav.article.shortURL }}) 
                             </span>
-                         <div class='subtext'><span>{{ fav.article.score }} point</span> -{{ fav.article.user.name }}-{{ fav.article.category.name }}</div>
+                         <div class='subtext'><span>{{ fav.article.score }} point</span> -{{ fav.article.user.name }}-{{ fav.article.category.name }} | <a href="/comments?id={{ fav.article.id }}">comment</a></div>
                     </li>
                     {% endfor %}
                     </ol>

@@ -146,6 +146,13 @@ class ServiceDB():
         except:
             self.session.rollback()
     
+    def getArticleByID(self, id):
+        try:
+            query = self.session.query(Article).filter_by(id=id).first()
+            return query
+        except:
+            self.session.rollback()
+    
     def queryArticlesByHot(self, pagesize = 32, page = 1, user_id = None):
         try:
             query = self.session.query(Article).all()

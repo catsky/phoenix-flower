@@ -80,6 +80,17 @@ def hot():
                            nextpagenum = nextpagenum, hasprivouspage = hasprivouspage,
                            privouspagenum = privouspagenum)
 
+@app.route("/comments")
+def comments():
+    artid = request.args.get('id', False)
+    if artid != False:
+        query = db.getArticleByID(artid)
+        return render_template('comments.html', article = query,
+                               login=haslogin(), 
+                           username=session.get('username',''))
+    return redirect(url_for('hot'))
+    
+    
 @app.route("/latest")
 def latest():
     pagestr = request.args.get('page', False)
