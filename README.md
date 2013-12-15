@@ -9,6 +9,7 @@ Sorry, not now. We are working on it.
 
 ## How to deploy on my own env?
 recommend to install this app on your LEMP server
+
 1. mysql php nginx install:
 https://www.digitalocean.com/community/articles/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu
 
