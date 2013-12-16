@@ -59,5 +59,9 @@ python index.py
 http://localhost:5000  
 ENJOY! :)
 
+*14. OR DEPLOY ON THE PRODUCTION ENV
+recommend to use nginx and uwsgi, follow the instruction below
+https://gist.github.com/mplewis/6076082
+
 ##License
 MIT
