@@ -335,7 +335,7 @@ def timesince(timestamp, default=u"刚才"):
             return u"%d %s之前" % (period, singular)
 
     return default
+startCron()
 
 if __name__ == "__main__":
-    startCron()
     app.run('0.0.0.0')
