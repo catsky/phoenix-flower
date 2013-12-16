@@ -62,6 +62,9 @@ ENJOY! :)
 *14. OR DEPLOY ON THE PRODUCTION ENV
 recommend to use nginx and uwsgi, follow the instruction below
 https://gist.github.com/mplewis/6076082
+···
+ uwsgi --socket 127.0.0.1:3031 --module index  --callable app --virtualenv /root/phoenixflower/ --daemonize=/var/log/uwsgi/phoenixflower.log
+···
 
 ##License
 MIT
