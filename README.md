@@ -2,10 +2,10 @@ phoenix-flower
 ==============
 
 ## introduction
-a hacker news like web app built up by using Flask, SQLAlchemy etc technologies.
+A hacker news like web app built up by using Flask, SQLAlchemy, cron etc technologies.
 
 ## Wanna see a Demo of this project?
-Sorry, not now. We are working on it.
+Yep, it's just launched on DigitalOcean. Try it via http://69.55.49.224/
 
 ## How to deploy on my own env?
 recommend to install this app on your LEMP server
