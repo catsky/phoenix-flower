@@ -171,7 +171,7 @@ class ServiceDB():
                 row.rowid = index + 1
                 row.shortURL = formatURL(row.URL)           
             
-            totalpage = int(math.ceil(len(query)/pagesize))
+            totalpage = int(math.ceil(len(query)/float(pagesize)))
             nextpagenum = 1
             privouspagenum = 1
             if totalpage > 1:

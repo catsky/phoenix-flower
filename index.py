@@ -161,14 +161,13 @@ def catcheck():
 @app.route("/urlcheck")
 def urlcheck(): 
     url = request.args.get('URL', False)
-    print url
     exist = db.URLcheck(url) 
     return json.dumps(exist) 
 
 @app.route("/signout")
 def signout():
     session.pop('username', None)
-    session.pop('user_id', None)
+    session.pop('user_id', None) 
     return redirect(url_for('hot'))
     
 @app.route("/submit", methods = ['GET', 'POST'])
