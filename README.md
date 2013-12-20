@@ -2,7 +2,7 @@ phoenix-flower
 ==============
 
 ## introduction
-A hacker news like web app built up by using Flask, SQLAlchemy, cron etc technologies.
+A hacker news like web app built up by using Python Web Framework Flask, SQLAlchemy, Mysql/SQLite, Cron etc technologies.
 
 ## Wanna see a Demo of this project?
 Yep, it's just launched on DigitalOcean. Try it via http://69.55.49.224/
