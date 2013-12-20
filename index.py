@@ -258,13 +258,6 @@ def weixin_msg():
             content = msg['Content']
             if content == u'?' or content == u'？':
                 return weixin.help_info(msg)
-            elif (content == u'n' or content == u'N' 
-                 or content == u'new' or content == u'NEW'
-                 or content == u'New'):
-                posts = operatorDB.get_weixin_articles()
-                rmsg = weixin.response_news_msg(msg, posts)
-                logging.error("3.weixin get rmsg: %s"%rmsg)
-                return rmsg
             elif (content == u'm' or content == u'M' 
                  or content == u'money' or content == u'MONEY'
                  or content == u'Money'):
@@ -290,13 +283,6 @@ def yixin_msg():
             content = msg['Content']
             if content == u'?' or content == u'？':
                 return weixin.help_info(msg)
-            elif (content == u'n' or content == u'N' 
-                 or content == u'new' or content == u'NEW'
-                 or content == u'New'):
-                posts = operatorDB.get_weixin_articles()
-                rmsg = weixin.response_news_msg(msg, posts)
-                logging.error("3.weixin get rmsg: %s"%rmsg)
-                return rmsg
             elif (content == u'm' or content == u'M' 
                  or content == u'money' or content == u'MONEY'
                  or content == u'Money'):
