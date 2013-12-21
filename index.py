@@ -262,8 +262,8 @@ def weixin_msg():
                  or content == u'money' or content == u'MONEY'
                  or content == u'Money'):
                 return weixin.currency_info_AUDCNY_Pic(msg)
-#             else:
-#                 return weixin.help_info(msg)
+            else:
+                return weixin.help_info(msg)
         elif weixin.is_location_msg(msg):
             Label = msg['Label'] 
             return weixin.help_info(msg)
