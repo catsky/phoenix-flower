@@ -101,8 +101,8 @@ def currency_info_AUDCNY_Pic(msg):
             pass
         cur_obj = Cur()
         cur_obj.title = u"当前 1 澳币可兑换  %s 人民币" % cur[1]
-        cur_obj.shorten_content = u"点击查看最近半小时和24小时汇率趋势图哦^_^也可以直接登录澳洲一刻小伙伴们的社区 http://42bang.com 随时查看汇率哦！社区里还有很多关于澳洲的精彩文章，都很值得收藏！欢迎小伙伴们投稿:)"
-        cur_obj.imgthumbnail = "/static/public/img/cur1.thumbnail.jpg"
+        cur_obj.shorten_content = u"点击查看最近半小时和24小时汇率趋势图^_^. 也可以直接登录澳洲一刻小伙伴们的社区 http://42bang.com 随时查看汇率哦！社区里还有很多关于澳洲的精彩文章，都很值得收藏！欢迎小伙伴们投稿:)"
+        cur_obj.imgthumbnail = "http://42bang.com/static/public/img/cur1.thumbnail.jpg"
         curs = list()
         curs.append(cur_obj)
         return response_news_msg(msg, curs)
@@ -164,8 +164,6 @@ def make_single_item(message):
     title_r = message.title
     description_r = message.shorten_content
     title = u'%s' % title_r
-    if len(description_r) > 75:
-        description_r = description_r[:70] + "..."
     description = '%s' % description_r
     picUrl = message.imgthumbnail
     url = 'http://42bang.com/cur/all'
