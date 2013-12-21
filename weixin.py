@@ -165,8 +165,8 @@ def make_single_item(message):
     description_r = message.shorten_content
     title = u'%s' % title_r
     if len(description_r) > 75:
-        msg_discription = description_r[:70] + "..."
-    description = '%s' % msg_discription
+        description_r = description_r[:70] + "..."
+    description = '%s' % description_r
     picUrl = message.imgthumbnail
     url = 'http://42bang.com/cur/all'
     item = NEWS_MSG_ITEM_TPL % (title, description, picUrl, url)
