@@ -32,7 +32,7 @@ virtualenv phoenixflower
 
 6. active your virtual env by
 ```
-source bin/activate
+source phoenixflower/bin/activate
 ```
 
 7. install dev env in order to make the mysql dev installation smoothly
@@ -41,26 +41,29 @@ sudo apt-get install libmysqlclient-dev python-dev
 ```
 8. install the requirements for this app
 ```
+sudo apt-get install git
+git clone https://github.com/catsky/phoenix-flower.git
+cd phoenix-flower
 pip install -r requirements.txt
 ```
 
-9. upload the source file of this app to your VPS
+9. rename config.back.py  to config.py, and fullfill the info according to your settings.
 
-10. rename config.back.py  to config.py, and fullfill the info according to your settings.
+10. create a db called "phoenixflower" using phpmyadmin or something else
 
-11. create a db called "phoenixflower" using phpmyadmin or something else
-
-12. start this app by running
+11. start this app by running
 ```
 python index.py
 ```
 
-13. access this app via 
+12. access this app via 
 http://localhost:5000  
 ENJOY! :)
 
-*14. OR DEPLOY ON THE PRODUCTION ENV
+*13. OR DEPLOY ON THE PRODUCTION ENV
 recommend to use nginx and uwsgi, follow the instruction below
+
+https://www.digitalocean.com/community/articles/how-to-setup-uwsgi-on-ubuntu-12-10
 https://gist.github.com/mplewis/6076082
 ```
  uwsgi --socket 127.0.0.1:3031 --module index  --callable app --virtualenv /root/phoenixflower/ --daemonize=/var/log/uwsgi/phoenixflower.log
