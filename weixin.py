@@ -101,7 +101,7 @@ def currency_info_AUDCNY_Pic(msg):
             pass
         cur_obj = Cur()
         cur_obj.title = "当前 1 澳币可以兑换  %s 人民币" % cur[1]
-        cur_obj.short_content = "点击查看最近半小时和24小时图"
+        cur_obj.shorten_content = "点击查看最近半小时和24小时图"
         cur_obj.thumbnail = "/static/public/img/cur1.thumbnail.jpg"
         curs = list()
         curs.append(cur_obj)
