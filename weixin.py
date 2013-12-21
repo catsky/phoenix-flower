@@ -92,6 +92,7 @@ def currency_info_AUDCNY(msg):
 当前 1 澳币可以兑换  %s 人民币""" % cur[1])
     else:
         return response_text_msg(msg, HELP_INFO)
+    
 
 def currency_info_AUDCNY_Pic(msg):
     cur = getAUDCNY()
@@ -103,7 +104,7 @@ def currency_info_AUDCNY_Pic(msg):
         cur_obj.short_content = "点击查看最近半小时和24小时图"
         cur_obj.thumbnail = "/static/public/img/cur1.thumbnail.jpg"
         curs = list()
-        curs.append(cur)
+        curs.append(cur_obj)
         return response_news_msg(msg, curs)
     else:
         return response_text_msg(msg, HELP_INFO)
