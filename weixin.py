@@ -6,11 +6,22 @@ __author__ = 'Ken Zheng'
 import hashlib
 import time
 import xml.etree.ElementTree as ET
+from PIL import Image
 
 import urllib2
 
 
-
+#generate the thumbnail for an image
+def generateThumbnail():
+    pass
+#     import os
+#     file = os.path.abspath(__file__)
+#     img = os.path.join(file, '../static/public/img/currency.jpg')
+#     im = Image.open(img)
+#     #im = Image.open(bucket.get_object_contents(file_name))
+#     im.thumbnail((320,200))
+#     nailfile = 
+#     im.save(file + ".thumbnail", "JPEG")
 #all message rec and push need verification
 def verification(request):
     signature = request.args.get('signature')
@@ -82,6 +93,19 @@ def currency_info_AUDCNY(msg):
     else:
         return response_text_msg(msg, HELP_INFO)
 
+def currency_info_AUDCNY_Pic(msg):
+    cur = getAUDCNY()
+    if cur != None:
+        class Cur(object):
+            pass
+        cur_obj = Cur()
+        cur_obj.title = "当前 1 澳币可以兑换  %s 人民币" % cur[1]
+        cur_obj.short_content = "点击查看最近半小时和24小时图"
+        cur_obj.thumbnail = "/static/public/img/cur1.thumbnail.jpg"
+        return response_news_msg(msg, cur_obj)
+    else:
+        return response_text_msg(msg, HELP_INFO)
+    
 NEWS_MSG_HEADER_TPL = \
 u"""
 <xml>
