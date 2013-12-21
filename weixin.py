@@ -102,7 +102,7 @@ def currency_info_AUDCNY_Pic(msg):
         cur_obj = Cur()
         cur_obj.title = u"当前 1 澳币可以兑换  %s 人民币" % cur[1]
         cur_obj.shorten_content = u"点击查看最近半小时和24小时图"
-        cur_obj.thumbnail = "/static/public/img/cur1.thumbnail.jpg"
+        cur_obj.imgthumbnail = "http://42bang.com/static/public/img/cur1.thumbnail.jpg"
         curs = list()
         curs.append(cur_obj)
         return response_news_msg(msg, curs)
