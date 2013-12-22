@@ -109,7 +109,7 @@ class ServiceDB():
             query = self.session.query(Money_Minute).order_by(Money_Minute.id.desc()).limit(count).all()
             for index, row in enumerate(query):
                 row.timeshow = timeformat(row.timestamp)
-                if index % 5 == 0:
+                if index % 6 == 0:
                     row.annotation = str(row.value)
                 else:
                     row.annotation = ''
@@ -135,7 +135,7 @@ class ServiceDB():
             query = self.session.query(Money_Hour).order_by(Money_Hour.id.desc()).all()
             for index, row in enumerate(query):
                 row.timeshow = timeformat(row.timestamp)
-                if index % 4 == 0:
+                if index % 6 == 0:
                     row.annotation = str(row.value)
                 else:
                     row.annotation = ''
