@@ -43,6 +43,11 @@ def currrency():
                            currencies_hour=cur2,  login=haslogin(), 
                            username=session.get('username',''), view="currency")
 
+@app.route("/petrol")
+def petrol():
+    return render_template("petrol.html", view="petrol")
+    
+    
 @app.route("/vote")
 def vote():
     user_id = request.args.get('uid', '')

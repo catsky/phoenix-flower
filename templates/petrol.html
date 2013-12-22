@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block title %}
+ 澳洲油价变化图
+{% endblock %}
+
+  {% block main%}
+<ul class="nav clearfix index-nav">
+                    <li {% if view == "hot" %}class="on"{% endif %}>
+                        <a href="/hot">热门</a>
+                    </li>
+                    <li {% if view == "latest" %}class="on"{% endif %}>
+                        <a href="/latest">最新</a>
+                    </li>
+                    <li {% if view == "currency" %}class="on"{% endif %}>
+                        <a href="/cur/all">澳币汇率</a>
+                    </li>
+                    <li {% if view == "petrol" %}class="on"{% endif %}>
+                        <a href="/petrol">澳洲油价</a>
+                    </li>
+                    <li>
+                        <a style="color:#ff6600;" href="/submit">>投稿</a>
+                    </li>
+    </ul>
+        
+<div class="organ topic-list">   
+        <h2 class="toc-header toc-header-bullet">
+            <a name="duration-of-petrol-price-cycles" id="duration-of-petrol-price-cycles"
+            class="toc-bookmark element-hidden-print toc-filter-processed" href="#"
+            rel="bookmark" title="Duration of petrol price cycles">
+            </a>
+            澳洲的油价和周期
+        </h2>
+        <p>
+            油价变化周期的长度，是从最便宜的一天到下一个最便宜的一天为一个周期，每个周期长度不尽相同。 从2012年开始，悉尼，墨尔本，布里斯班和阿德莱德的周期长度已经从7天上升至10到14日。而在珀斯，
+            周期一直维持7天左右。
+        </p>                                   
+    <div class="organ topic-list">
+        <ol class="item-list">
+             <li class='item'> 
+                <div class='textline'>
+                    <a href="#cheapest-day-to-buy-petrol" class="toc-filter-processed">
+                            >>油价最便宜的那一天
+                    </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                   <a href="#most-expensive-day-to-buy-petrol" class="toc-filter-processed">
+                            >>油价最贵的那一天
+                   </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                    <a href="#petrol-prices-in-sydney" class="toc-filter-processed">
+                            >>悉尼的油价变化
+                    </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                     <a href="#petrol-prices-in-melbourne" class="toc-filter-processed">
+                            >>墨尔本的油价变化
+                    </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                    <a href="#petrol-prices-in-brisbane" class="toc-filter-processed">
+                            >>布里斯班的油价变化
+                    </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                    <a href="#petrol-prices-in-adelaide" class="toc-filter-processed">
+                            >>阿德莱德的油价变化
+                    </a>
+                </div>
+            </li>
+            <li class='item'> 
+                <div class='textline'>
+                    <a href="#petrol-prices-in-perth" class="toc-filter-processed">
+                            >>佩斯的油价变化
+                    </a>
+                </div>
+            </li>
+        </ol>
+    </div>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="cheapest-day-to-buy-petrol" id="cheapest-day-to-buy-petrol" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Cheapest day to buy petrol">
+        </a>
+        油价最便宜的一天
+    </h2>
+    <h3>
+        上周油价最便宜的一天
+    </h3>
+    <p>
+        最近，在澳洲各大城市油价最便宜的日子有所变化，除了在珀斯，最便宜的一天基本都在周三
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <p>
+                        星期
+                    </p>
+                </th>
+                <th>
+                    <p>
+                        悉尼
+                    </p>
+                </th>
+                <th>
+                    <p>
+                        墨尔本
+                    </p>
+                </th>
+                <th>
+                    <p>
+                        布里斯班
+                    </p>
+                </th>
+                <th>
+                    <p>
+                        阿德莱德
+                    </p>
+                </th>
+                <th>
+                    <p>
+                        珀斯
+                    </p>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    19 December&nbsp;2013
+                </td>
+                <td>
+                    Friday
+                </td>
+                <td>
+                    Friday
+                </td>
+                <td>
+                    Friday
+                </td>
+                <td>
+                    Friday
+                </td>
+                <td>
+                    Wednesday
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="petrol-prices-in-sydney" id="petrol-prices-in-sydney" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Petrol prices in Sydney">
+        </a>
+        悉尼油价变化
+    </h2>
+    <p>
+        下图显示过去30天内，悉尼无铅汽油每天的价格变化情况.
+    </p>
+    <p>
+        <img alt="Average daily unleaded petrol prices in Sydney over the past 30 days"
+        src="/static/public/img/brisbane.jpg">
+    </p>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="petrol-prices-in-melbourne" id="petrol-prices-in-melbourne" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Petrol prices in Melbourne">
+        </a>
+        墨尔本油价变化
+    </h2>
+    <p>
+        下图显示过去30天内，墨尔本无铅汽油每天的价格变化情况.
+    </p>
+    <p>
+        <img alt="Average daily unleaded petrol prices in Melbourne over the past 30 days"
+        src="/static/public/img/brisbane.jpg">
+    </p>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="petrol-prices-in-brisbane" id="petrol-prices-in-brisbane" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Petrol prices in Brisbane">
+        </a>
+        布里斯班油价变化
+    </h2>
+    <p>
+        下图显示过去30天内，布里斯班无铅汽油每天的价格变化情况.
+    </p>
+    <p>
+        <img alt="Average daily unleaded petrol prices in Brisbane over the past 30 days"
+        src="/static/public/img/brisbane.jpg">
+    </p>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="petrol-prices-in-adelaide" id="petrol-prices-in-adelaide" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Petrol prices in Adelaide">
+        </a>
+        阿德莱德油价变化
+    </h2>
+    <p>
+        下图显示过去30天内，阿德莱德无铅汽油每天的价格变化情况.
+    </p>
+    <p>
+        <img alt="Average daily unleaded petrol prices in Adelaide over the past 30 days"
+        src="/static/public/img/brisbane.jpg">
+    </p>
+    <h2 class="toc-header toc-header-bullet">
+        <a name="petrol-prices-in-perth" id="petrol-prices-in-perth" class="toc-bookmark element-hidden-print toc-filter-processed"
+        href="#" rel="bookmark" title="Petrol prices in Perth">
+        </a>
+        珀斯油价变化
+    </h2>
+    <p>
+        在珀斯，油价最便宜的一天往往是周三，而最贵的那天往往是周四。
+    </p>
+    <p>
+        下图显示过去30天内，珀斯无铅汽油每天的价格变化情况.
+    </p>
+    <p>
+        <img alt="Average daily unleaded petrol prices in Perth over the past 30 days"
+        src="/static/public/img/brisbane.jpg">
+    </p>
+</div>
+  {% endblock %}

@@ -6,6 +6,22 @@ html,body,div,p,ol,ul,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,form,input,select,button,tex
   padding: 0;
 }
 
+h2 {
+padding-top: 15px;
+padding-left: 10px;
+}
+
+h3 {
+padding-top: 7px;
+padding-left: 10px;
+}
+
+
+p {
+padding-top: 10px;
+padding-left: 10px;
+}
+
 body {
   margin: 0;
   padding: 0;
