@@ -41,7 +41,8 @@ def petrolCapture(imgstorepath):
     
     #get the data of cheapest in last week
     t1 = doc.xpath('/html/body/div/div/div[3]/div/div[2]/div/div/div/div/div/div/div/div/div/div/table/tbody/tr/td/text()')
-    cheapest = [item for item in t1 if item != '\n']  
+    cheapest = [item for item in t1 if item.strip('\n\t') != '']  
+    cheapest[0] = cheapest[0].encode('utf-8').replace('\xc2\xa0', ' ') # remove special char
     db.savePetrolCheapest(cheapest)
     
     #get the charts of major cities
