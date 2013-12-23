@@ -124,22 +124,22 @@
         <tbody>
             <tr>
                 <td>
-                    19 December&nbsp;2013
+                    {{ cheapest.weekending }}
                 </td>
                 <td>
-                    Friday
+                    {{ cheapest.sydney }}
                 </td>
                 <td>
-                    Friday
+                    {{ cheapest.melbourne }}
                 </td>
                 <td>
-                    Friday
+                    {{ cheapest.brisbane }}
                 </td>
                 <td>
-                    Friday
+                    {{ cheapest.adelaide }}
                 </td>
                 <td>
-                    Wednesday
+                    {{ cheapest.perth }}
                 </td>
             </tr>
         </tbody>
@@ -153,10 +153,10 @@
     <p>
         下图显示过去30天内，悉尼无铅汽油每天的价格变化情况.
     </p>
-    <p>
+    <div>
         <img alt="Average daily unleaded petrol prices in Sydney over the past 30 days"
-        src="/static/public/img/brisbane.jpg" class="max720">
-    </p>
+        src="/static/public/img/sydney.jpg" class="imgflex"/></div>
+    
     <h2>
         <a name="petrol-prices-in-melbourne" id="petrol-prices-in-melbourne"
         href="#" rel="bookmark" title="Petrol prices in Melbourne">
@@ -168,7 +168,7 @@
     </p>
     <p>
         <img alt="Average daily unleaded petrol prices in Melbourne over the past 30 days"
-        src="/static/public/img/brisbane.jpg" class="max720">
+        src="/static/public/img/melbourne.jpg" class="imgflex">
     </p>
     <h2>
         <a name="petrol-prices-in-brisbane" id="petrol-prices-in-brisbane" 
@@ -181,7 +181,7 @@
     </p>
     <p>
         <img alt="Average daily unleaded petrol prices in Brisbane over the past 30 days"
-        src="/static/public/img/brisbane.jpg" class="max720">
+        src="/static/public/img/brisbane.jpg" class="imgflex">
     </p>
     <h2 >
         <a name="petrol-prices-in-adelaide" id="petrol-prices-in-adelaide" 
@@ -194,7 +194,7 @@
     </p>
     <p>
         <img alt="Average daily unleaded petrol prices in Adelaide over the past 30 days"
-        src="/static/public/img/brisbane.jpg" class="max720">
+        src="/static/public/img/adelaide.jpg" class="imgflex">
     </p>
     <h2>
         <a name="petrol-prices-in-perth" id="petrol-prices-in-perth"
@@ -210,7 +210,7 @@
     </p>
     <p>
         <img alt="Average daily unleaded petrol prices in Perth over the past 30 days"
-        src="/static/public/img/brisbane.jpg" class="max720">
+        src="/static/public/img/perth.jpg" class="imgflex">
     </p>
 </div>
   {% endblock %}

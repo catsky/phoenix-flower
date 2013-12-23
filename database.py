@@ -93,6 +93,31 @@ class ServiceDB():
     def instance(self):
         pass
      
+    def queryCheapestPetrol(self):
+        try:
+            query = self.session.query(Petrol_Cheapest).order_by(Petrol_Cheapest.timestamp.desc()).first()
+            return query
+        except:
+            self.session.rollback()
+        
+    def savePetrolCheapest(self, tuple_in):
+        try:   
+            petrolcheap = Petrol_Cheapest(weekending=tuple_in[0], 
+                                          sydney=tuple_in[1],
+                                          melbourne=tuple_in[2],
+                                          brisbane=tuple_in[3],
+                                          adelaide=tuple_in[4],
+                                          perth=tuple_in[5],
+                                          timestamp = time.time())
+            self.session.add(petrolcheap)
+            self.session.commit()
+        except:
+            self.session.rollback()
+        finally:
+            self.session.close()
+    
+        
+        
     def saveMoneyMinute(self, tuple_in):
         try:
             moneyminutes = Money_Minute(name=tuple_in[0], timestamp=tuple_in[1], value=tuple_in[2])
@@ -434,6 +459,21 @@ class ServiceDB():
         except:
             self.session.rollback()
 
+class Petrol_Cheapest(_Base):
+    __tablename__ = 'petrol_cheapest'
+    id = Column(Integer, primary_key=True)
+    weekending = Column(String(50))
+    timestamp = Column(DECIMAL, nullable=False)
+    sydney = Column(String(20))
+    melbourne = Column(String(20))
+    brisbane = Column(String(20))
+    adelaide = Column(String(20))
+    perth = Column(String(20))
+        
+    def __repr__(self):
+        print "<Petrol_Cheapest (%s, %s)>" % (self.id, self.timestamp)
+     
+     
 class Money_Minute(_Base):
     __tablename__ = 'money_minutes'
     id = Column(Integer, primary_key=True)

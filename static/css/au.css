@@ -148,8 +148,7 @@ a:hover {
 }
 
 .article {
-    padding-left: 5px;
-    padding-bottom: 10px;
+    padding: 5px 10px 10px 10px;
 }
 
 .nav {
@@ -468,6 +467,7 @@ textarea {
     color:#ff6600;
 }
 
-.max720 {
+.imgflex {
  max-width: 720px;
+ width: 90%;
 }

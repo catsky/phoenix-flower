@@ -29,10 +29,11 @@ def startCron():
     job1.every().minute()
     job2 = cron.new(command='%s %s/cron.py --hours' % (PYTHON_VIRTUAL, dirname))
     job2.every().hour()
+    job3 = cron.new(command='%s %s/cron.py --days' % (PYTHON_VIRTUAL, dirname))
+    job3.hour.on(3)
     cron.write()
     print 'cron job started as the following'
     print cron.render()
-
 
 
 @app.route("/cur/all", methods = ['GET', 'POST'])
@@ -45,7 +46,8 @@ def currrency():
 
 @app.route("/petrol")
 def petrol():
-    return render_template("petrol.html", view="petrol")
+    query = db.queryCheapestPetrol()
+    return render_template("petrol.html", view="petrol", cheapest = query)
     
     
 @app.route("/vote")

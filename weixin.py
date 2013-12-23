@@ -108,11 +108,32 @@ def currency_info_AUDCNY_Pic(msg):
 社区里还有很多关于澳洲的精彩文章，都很值得收藏！欢迎小伙伴们投稿:)"""
 
         cur_obj.imgthumbnail = "http://42bang.com/static/public/img/cur1.thumbnail.jpg"
+        cur_obj.url = 'http://42bang.com/cur/all'
         curs = list()
         curs.append(cur_obj)
         return response_news_msg(msg, curs)
     else:
         return response_text_msg(msg, HELP_INFO)
+    
+    
+
+def petrol(msg):
+    class Petrol(object):
+        pass
+    p_obj = Petrol()
+    p_obj.title = u"最新的澳洲油价变化周期"
+    p_obj.shorten_content = u"""点击查看最近油价的最低点和各大城市的最新油价周期情况。^_^. 
+也可以直接登录澳洲一刻小伙伴们的社区
+[ http://42bang.com ] 随时查看哦！
+社区里还有很多关于澳洲的精彩文章，都很值得收藏！欢迎小伙伴们投稿:)"""
+
+    p_obj.imgthumbnail = "http://42bang.com/static/public/img/cur1.thumbnail.jpg"
+    p_obj.url = 'http://42bang.com/petrol'
+    pets = list()
+    pets.append(p_obj)
+    return response_news_msg(msg, pets)
+
+    
     
 NEWS_MSG_HEADER_TPL = \
 u"""
@@ -171,8 +192,8 @@ def make_single_item(message):
     title = u'%s' % title_r
     description = '%s' % description_r
     picUrl = message.imgthumbnail
-    url = 'http://42bang.com/cur/all'
-    item = NEWS_MSG_ITEM_TPL % (title, description, picUrl, url)
+    
+    item = NEWS_MSG_ITEM_TPL % (title, description, picUrl, message.url)
     #item = NEWS_MSG_ITEM_TPL
     return item
 
