@@ -269,6 +269,10 @@ def weixin_msg():
                  or content == u'money' or content == u'MONEY'
                  or content == u'Money'):
                 return weixin.currency_info_AUDCNY_Pic(msg)
+            elif (content == u'p' or content == u'P' 
+                 or content == u'petrol' or content == u'PETROL'
+                 or content == u'Petrol'):
+                return weixin.petrol(msg)
             else:
                 return weixin.help_info(msg)
         elif weixin.is_location_msg(msg):
