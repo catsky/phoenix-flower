@@ -6,6 +6,26 @@ html,body,div,p,ol,ul,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,form,input,select,button,tex
   padding: 0;
 }
 
+
+table{ 
+margin-left: 10px;
+border:1px solid #e2e2e2; 
+text-align: center;
+}
+
+th{
+text-align:center;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+td {
+text-align:center;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+
 h2 {
 padding-top: 15px;
 padding-left: 10px;
@@ -127,6 +147,10 @@ a:hover {
     background-color: white;
 }
 
+.article {
+    padding-left: 5px;
+    padding-bottom: 10px;
+}
 
 .nav {
     padding-left: 20px;
@@ -442,4 +466,8 @@ textarea {
 
 .highlight {
     color:#ff6600;
+}
+
+.max720 {
+ max-width: 720px;
 }
