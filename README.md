@@ -8,7 +8,7 @@ A hacker news like web app built up by using Python Web Framework Flask, SQLAlch
 Yep, it's just launched on DigitalOcean. Try it via http://42bang.com
 
 ## How to deploy on my own env?
-recommend to install this app on your LEMP server
+recommend to install this app on your LEMP server.
 
 1. mysql php nginx install:
 https://www.digitalocean.com/community/articles/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
