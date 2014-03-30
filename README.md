@@ -20,6 +20,7 @@ https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-l
 ```
 sudo apt-get install python-pip
 ```
+
 4. install virtualenv
 ```
 pip install virtualenv
@@ -39,6 +40,7 @@ source phoenixflower/bin/activate
 ```
 sudo apt-get install libmysqlclient-dev python-dev
 ```
+
 8. install the requirements for this app
 ```
 sudo apt-get install git
