@@ -21,6 +21,10 @@ https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-l
 sudo apt-get install python-pip
 ```
 
+3. install pip
+```
+sudo apt-get install python-pip
+```
 4. install virtualenv
 ```
 pip install virtualenv
