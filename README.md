@@ -16,7 +16,7 @@ https://www.digitalocean.com/community/articles/how-to-install-linux-nginx-mysql
 2. phpmyadmin nginx
 https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-lemp-server/
 
-3.  install pip
+3. install pip
 ```
 sudo apt-get install python-pip
 ```
