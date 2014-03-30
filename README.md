@@ -17,14 +17,10 @@ https://www.digitalocean.com/community/articles/how-to-install-linux-nginx-mysql
 https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-lemp-server/
 
 3. install pip
-```
-sudo apt-get install python-pip
-```
+ ```
+ sudo apt-get install python-pip
+ ```
 
-3. install pip
-```
-sudo apt-get install python-pip
-```
 4. install virtualenv
 ```
 pip install virtualenv
