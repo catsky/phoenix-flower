@@ -22,45 +22,45 @@ https://www.digitalocean.com/community/articles/how-to-install-phpmyadmin-on-a-l
  ```
 
 4. install virtualenv
-```
-pip install virtualenv
-```
+ ```
+ pip install virtualenv
+ ```
 
 5. create the virtualenv for phoenixflower
-```
-virtualenv phoenixflower
-```
+ ```
+ virtualenv phoenixflower
+ ```
 
 6. active your virtual env by
-```
-source phoenixflower/bin/activate
-```
+ ```
+ source phoenixflower/bin/activate
+ ```
 
 7. install dev env in order to make the mysql dev installation smoothly
-```
-sudo apt-get install libmysqlclient-dev python-dev
-```
+ ```
+  sudo apt-get install libmysqlclient-dev python-dev
+ ```
 
 8. install the requirements for this app
-```
-sudo apt-get install git
-git clone https://github.com/catsky/phoenix-flower.git
-cd phoenix-flower
-pip install -r requirements.txt
-```
+ ```
+ sudo apt-get install git
+ git clone https://github.com/catsky/phoenix-flower.git
+ cd phoenix-flower
+ pip install -r requirements.txt
+ ```
 
 9. rename config.back.py  to config.py, and fullfill the info according to your settings.
 
 10. create a db called "phoenixflower" using phpmyadmin or something else
 
 11. start this app by running
-```
-python index.py
-```
+ ```
+ python index.py
+ ```
 
 12. access this app via 
-http://localhost:5000  
-ENJOY! :)
+ http://localhost:5000  
+ ENJOY! :)
 
 *13. OR DEPLOY ON THE PRODUCTION ENV
 recommend to use nginx and uwsgi, follow the instruction below
