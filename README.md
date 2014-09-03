@@ -1,6 +1,8 @@
 phoenix-flower
 ==============
 ![](https://github.com/github/training-kit/blob/master/images/professortocat.png)
+![](https://github.com/catsky/phoenix-flower/blob/master/42bang.png)
+
 ## introduction
 A hacker news like web app built up by using Python Web Framework Flask, SQLAlchemy, Mysql/SQLite, Cron etc technologies.
 
